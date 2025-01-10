@@ -1,0 +1,11 @@
+<h1>{{ artist.name }}</h1>
+<p>Genre: {{ artist.genre }}</p>
+<p>Debut Date: {{ artist.debut_date }}</p>
+<p>Bio: {{ artist.bio }}</p>
+
+<h2>Songs by {{ artist.name }}</h2>
+<ul>
+    {% for song in artist.songs.all %}
+        <li>{{ song.title }} ({{ song.release_date }}) - {{ song.album }}</li>
+    {% endfor %}
+</ul>

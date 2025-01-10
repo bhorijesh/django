@@ -1,0 +1,6 @@
+<h1>Music Tracks</h1>
+<ul>
+  {% for track in music_tracks %}
+    <li><a href="{% url 'music-detail' track.id %}">{{ track.title }}</a> - {{ track.artist.name }}</li>
+  {% endfor %}
+</ul>

@@ -1,0 +1,6 @@
+<h1>{{ music.title }}</h1>
+<p>Artist: <a href="{% url 'artist-detail' music.artist.id %}">{{ music.artist.name }}</a></p>
+<p>Album: {{ music.album }}</p>
+<p>Genre: {{ music.genre }}</p>
+<p>Duration: {{ music.duration }}</p>
+<p>Release Date: {{ music.release_date }}</p>
