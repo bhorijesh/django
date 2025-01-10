@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music List</title>
+    {% comment %} <link rel="stylesheet" href="{% static 'css/styles.css' %}"> <!-- Optional: Link to a CSS file --> {% endcomment %}
+</head>
+<body>
+    <header>
+        <h1>Welcome to the Music Collection</h1>
+        <nav>
+            <ul>
+                <li><a href="{% url 'artist-list' %}">Artists</a></li>
+                <li><a href="{% url 'music-list' %}">Music</a></li>
+                <li><a href="{% url 'artist-create' %}">Add Artist</a></li>
+                <li><a href="{% url 'music-create' %}">Add Music</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section>
+        <h2>Music Collection</h2>
+        <ul>
+            {% for music_item in music %}  <!-- Corrected variable to 'music' -->
+                <li>
+                    <h3>{{ music_item.title }} by {{ music_item.artist.name }}</h3>  <!-- Assuming 'title' and 'artist.name' are valid attributes -->
+                    <p>Released: {{ music_item.release_date }}</p>
+                    <p>{{ music_item.description }}</p>
+                    <a href="{% url 'music-detail' music_item.id %}">View Details</a>
+                </li>
+            {% empty %}
+                <p>No music records available.</p>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Music Collection</p>
+    </footer>
+</body>
+</html>

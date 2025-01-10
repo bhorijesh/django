@@ -123,6 +123,10 @@ class MusicDetailView(APIView):
         return Response({"detail": "Music deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
 
 
+def index(request):
+    music = Music.objects.all()
+    return render(request, 'index.html', {'music_list': music})
+
 # Artist Creation View (for creating an artist through a form)
 def artist_create(request):
     if request.method == 'POST':
