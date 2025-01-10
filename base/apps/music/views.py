@@ -10,13 +10,14 @@ from .forms import ArtistForm, MusicForm
 # Artist List View (for listing all artists and creating a new artist)
 class ArtistListView(APIView):
     def get(self, request):
-        if request.accepts("application/json"):
+        # Force the rendering of HTML for browsers (regardless of the Accept header)
+        if 'text/html' in request.META.get('HTTP_ACCEPT', '') or 'application/xhtml+xml' in request.META.get('HTTP_ACCEPT', ''):
             artists = Artist.objects.all()
-            serializer = ArtistSerializer(artists, many=True)
-            return Response(serializer.data)
+            return render(request, 'artist_list.html', {'artists': artists})  # HTML response
         else:
             artists = Artist.objects.all()
-            return render(request, 'artist_list.html', {'artists': artists})
+            serializer = ArtistSerializer(artists, many=True)
+            return Response(serializer.data)  # JSON response for API clients
 
     def post(self, request):
         # Create a new artist via API
@@ -35,11 +36,12 @@ class ArtistDetailView(APIView):
         except Artist.DoesNotExist:
             return Response({"detail": "Artist not found."}, status=status.HTTP_404_NOT_FOUND)
 
-        if request.accepts("application/json"):
-            serializer = ArtistSerializer(artist)
-            return Response(serializer.data)
+        # Force HTML rendering for browser requests (with Accept header checking)
+        if 'text/html' in request.META.get('HTTP_ACCEPT', '') or 'application/xhtml+xml' in request.META.get('HTTP_ACCEPT', ''):
+            return render(request, 'artist_detail.html', {'artist': artist})  # HTML response for browser
         else:
-            return render(request, 'artist_detail.html', {'artist': artist})
+            serializer = ArtistSerializer(artist)
+            return Response(serializer.data)  # JSON response for API clients
 
     def put(self, request, artist_id):
         try:
@@ -66,13 +68,14 @@ class ArtistDetailView(APIView):
 # Music List View (for listing all music records and creating a new music record)
 class MusicListView(APIView):
     def get(self, request):
-        if request.accepts("application/json"):
+        # Force the rendering of HTML for browsers (regardless of Accept header)
+        if 'text/html' in request.META.get('HTTP_ACCEPT', '') or 'application/xhtml+xml' in request.META.get('HTTP_ACCEPT', ''):
             music = Music.objects.all()
-            serializer = MusicSerializer(music, many=True)
-            return Response(serializer.data)
+            return render(request, 'music_list.html', {'music_list': music})  # HTML response for browser
         else:
             music = Music.objects.all()
-            return render(request, 'music_list.html', {'music_list': music})
+            serializer = MusicSerializer(music, many=True)
+            return Response(serializer.data)  # JSON response for API clients
 
     def post(self, request):
         # Create a new music record via API
@@ -91,11 +94,12 @@ class MusicDetailView(APIView):
         except Music.DoesNotExist:
             return Response({"detail": "Music not found."}, status=status.HTTP_404_NOT_FOUND)
 
-        if request.accepts("application/json"):
-            serializer = MusicSerializer(music)
-            return Response(serializer.data)
+        # Force HTML rendering for browser requests (with Accept header checking)
+        if 'text/html' in request.META.get('HTTP_ACCEPT', '') or 'application/xhtml+xml' in request.META.get('HTTP_ACCEPT', ''):
+            return render(request, 'music_detail.html', {'music': music})  # HTML response for browser
         else:
-            return render(request, 'music_detail.html', {'music': music})
+            serializer = MusicSerializer(music)
+            return Response(serializer.data)  # JSON response for API clients
 
     def put(self, request, music_id):
         try:

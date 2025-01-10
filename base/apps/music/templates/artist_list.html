@@ -8,7 +8,8 @@
     <h1>Artists</h1>
     <ul>
         {% for artist in artists %}
-            <li><a href="{% url 'artist-detail' artist.id %}">{{ artist.name }}</a></li>
+            {% comment %} <li><a href="{% url 'artist-detail' artist.id %}">{{ artist.name }}</a></li> {% endcomment %}
+            <li>{{artist.name}}</li>
         {% endfor %}
     </ul>
     <a href="{% url 'artist-create' %}">Add New Artist</a>
