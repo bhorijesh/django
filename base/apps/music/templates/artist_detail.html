@@ -1,11 +1,19 @@
-<h1>{{ artist.name }}</h1>
-<p>Genre: {{ artist.genre }}</p>
-<p>Debut Date: {{ artist.debut_date }}</p>
-<p>Bio: {{ artist.bio }}</p>
-
-<h2>Songs by {{ artist.name }}</h2>
-<ul>
-    {% for song in artist.songs.all %}
-        <li>{{ song.title }} ({{ song.release_date }}) - {{ song.album }}</li>
-    {% endfor %}
-</ul>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ artist.name }} Details</title>
+</head>
+<body>
+    <h1>{{ artist.name }}</h1>
+    <p>Genre: {{ artist.genre }}</p>
+    <p>Albums: 
+        <ul>
+            {% for album in artist.albums.all %}
+                <li>{{ album.title }}</li>
+            {% endfor %}
+        </ul>
+    </p>
+    <a href="{% url 'artist-list' %}">Back to Artist List</a>
+</body>
+</html>

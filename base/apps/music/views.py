@@ -1,18 +1,25 @@
+from django.shortcuts import render, redirect
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Artist, Music
 from .serializers import ArtistSerializer, MusicSerializer
+from .forms import ArtistForm, MusicForm
+
 
 # Artist List View (for listing all artists and creating a new artist)
 class ArtistListView(APIView):
     def get(self, request):
-        artists = Artist.objects.all()
-        serializer = ArtistSerializer(artists, many=True)
-        return Response(serializer.data)
+        if request.accepts("application/json"):
+            artists = Artist.objects.all()
+            serializer = ArtistSerializer(artists, many=True)
+            return Response(serializer.data)
+        else:
+            artists = Artist.objects.all()
+            return render(request, 'artist_list.html', {'artists': artists})
 
     def post(self, request):
-        # Create a new artist
+        # Create a new artist via API
         serializer = ArtistSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -27,9 +34,12 @@ class ArtistDetailView(APIView):
             artist = Artist.objects.get(id=artist_id)
         except Artist.DoesNotExist:
             return Response({"detail": "Artist not found."}, status=status.HTTP_404_NOT_FOUND)
-        
-        serializer = ArtistSerializer(artist)
-        return Response(serializer.data)
+
+        if request.accepts("application/json"):
+            serializer = ArtistSerializer(artist)
+            return Response(serializer.data)
+        else:
+            return render(request, 'artist_detail.html', {'artist': artist})
 
     def put(self, request, artist_id):
         try:
@@ -48,7 +58,7 @@ class ArtistDetailView(APIView):
             artist = Artist.objects.get(id=artist_id)
         except Artist.DoesNotExist:
             return Response({"detail": "Artist not found."}, status=status.HTTP_404_NOT_FOUND)
-        
+
         artist.delete()
         return Response({"detail": "Artist deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
 
@@ -56,12 +66,16 @@ class ArtistDetailView(APIView):
 # Music List View (for listing all music records and creating a new music record)
 class MusicListView(APIView):
     def get(self, request):
-        music = Music.objects.all()
-        serializer = MusicSerializer(music, many=True)
-        return Response(serializer.data)
+        if request.accepts("application/json"):
+            music = Music.objects.all()
+            serializer = MusicSerializer(music, many=True)
+            return Response(serializer.data)
+        else:
+            music = Music.objects.all()
+            return render(request, 'music_list.html', {'music_list': music})
 
     def post(self, request):
-        # Create a new music record
+        # Create a new music record via API
         serializer = MusicSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -77,8 +91,11 @@ class MusicDetailView(APIView):
         except Music.DoesNotExist:
             return Response({"detail": "Music not found."}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = MusicSerializer(music)
-        return Response(serializer.data)
+        if request.accepts("application/json"):
+            serializer = MusicSerializer(music)
+            return Response(serializer.data)
+        else:
+            return render(request, 'music_detail.html', {'music': music})
 
     def put(self, request, music_id):
         try:
@@ -100,3 +117,27 @@ class MusicDetailView(APIView):
 
         music.delete()
         return Response({"detail": "Music deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+
+
+# Artist Creation View (for creating an artist through a form)
+def artist_create(request):
+    if request.method == 'POST':
+        form = ArtistForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('artist-list')
+    else:
+        form = ArtistForm()
+    return render(request, 'artist_form.html', {'form': form})
+
+
+# Music Creation View (for creating a music record through a form)
+def music_create(request):
+    if request.method == 'POST':
+        form = MusicForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('music-list')
+    else:
+        form = MusicForm()
+    return render(request, 'music_form.html', {'form': form})

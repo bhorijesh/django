@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Music</title>
+</head>
+<body>
+    <h1>Create New Music Record</h1>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <!-- Render form fields -->
+        {{ form.as_p }}
+        
+        <button type="submit">Save</button>
+    </form>
+    
+    <!-- Link to go back to music list -->
+    <a href="{% url 'music-list' %}">Back to Music List</a>
+</body>
+</html>
