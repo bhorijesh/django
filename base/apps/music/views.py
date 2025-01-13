@@ -5,6 +5,9 @@ from rest_framework import status
 from .models import Artist, Music
 from .serializers import ArtistSerializer, MusicSerializer
 from .forms import ArtistForm, MusicForm
+from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect
+from django.contrib.auth.forms import AuthenticationForm
 
 
 # Artist List View (for listing all artists and creating a new artist)
@@ -149,3 +152,24 @@ def music_create(request):
     else:
         form = MusicForm()
     return render(request, 'music_form.html', {'form': form})
+
+def login_user(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')  
+            password = form.cleaned_data.get('password')  
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                # Log the user in
+                login(request, user)
+                return redirect('index')  
+            else:
+                form.add_error(None, 'Invalid username or password')
+        else:
+            form.add_error(None, 'Form is invalid')
+
+    else:
+        form = AuthenticationForm()
+
+    return render(request, 'form.html', {'form': form})    
