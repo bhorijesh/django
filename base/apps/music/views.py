@@ -9,6 +9,7 @@ from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
 
 # Artist List View (for listing all artists and creating a new artist)
@@ -126,13 +127,13 @@ class MusicDetailView(APIView):
         music.delete()
         return Response({"detail": "Music deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
 
-
+@login_required
 def index(request):
     music = Music.objects.all()
     return render(request, 'index.html', {'music_list': music})
 
 # Artist Creation View (for creating an artist through a form)
-
+@login_required
 def artist_create(request):
     if request.method == 'POST':
         form = ArtistForm(request.POST)
@@ -145,7 +146,7 @@ def artist_create(request):
 
 
 # Music Creation View (for creating a music record through a form)
-
+@login_required
 def music_create(request):
     if request.method == 'POST':
         form = MusicForm(request.POST)
@@ -193,3 +194,21 @@ def update(request, music_id):
         form = MusicForm(instance=music)
 
     return render(request, 'update.html', {'form': form, 'music': music})
+
+
+def register(request):
+    if request.method == "POST":
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        
+        user = User.objects.create(
+            first_name = first_name,
+            last_name = last_name,
+            username = username,
+        )
+        user.set_password(password)
+        user.save()
+        return redirect('login')
+    return render(request, 'register.html')

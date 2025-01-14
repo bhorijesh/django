@@ -1,7 +1,9 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Artist(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL , null=True , blank=True)
     name = models.CharField(max_length=255)
     genre = models.CharField(max_length=100, blank=True, null=True)
     debut_date = models.DateField(blank=True, null=True)
@@ -11,6 +13,7 @@ class Artist(models.Model):
         return self.name
 
 class Music(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL , null=True , blank=True)
     title = models.CharField(max_length=255)
     release_date = models.DateField(blank=True, null=True)
     duration = models.DurationField(blank=True, null=True)  # For song duration
