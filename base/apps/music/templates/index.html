@@ -154,12 +154,44 @@
             background-color: darkred;  /* Darker red on hover */
         }
         
-        
+        .navbar .container-fluid {
+            display: flex;
+            justify-content: space-between;
+        }
+      
+        .navbar .navbar-brand {
+            margin-left: auto;
+        }
+        .navbar-brand {
+            background-color: #f44336; 
+            color: white;             
+            padding: 10px 20px;        
+            font-size: 16px;           
+            border: none;              
+            cursor: pointer;          
+            border-radius: 5px;        
+            text-transform: uppercase; 
+            transition: background-color 0.3s ease; 
+          }
+      
+          .navbar-brand:hover {
+            background-color: #d32f2f;
+          }
+      
+          .navbar-brand:focus {
+            outline: none; 
+          }
     </style>
 </head>
 <body>
     <header>
-        <h1>Welcome to the Music Collection</h1>
+        <nav class="navbar bg-body-tertiary">
+            <div class="container-fluid">
+                <div></div>
+              <a class="navbar-brand" href="{% url 'logout_page'  %}">Logout</a>
+            </div>
+          </nav> 
+        <h1>Welcome to the Music Collection</h1>         
         <nav>
             <ul>
                 <li><a href="{% url 'artist-list' %}">Artists</a></li>

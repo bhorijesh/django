@@ -12,5 +12,6 @@ urlpatterns = [
     path('delete/<int:music_id>/', delete , name = "delete"),
     path('update/<int:music_id>/', update , name = "update"),
     path('register/', register , name ='register'),
+    path('logout/', logout_page , name ='logout_page' ),
     path('', login_user, name='login')
 ]

@@ -7,10 +7,11 @@ from .serializers import ArtistSerializer, MusicSerializer
 from .forms import ArtistForm, MusicForm
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm 
+from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-
+from django.contrib import messages
 
 # Artist List View (for listing all artists and creating a new artist)
 class ArtistListView(APIView):
@@ -155,7 +156,24 @@ def music_create(request):
             return redirect('music-list')
     else:
         form = MusicForm()
-    return render(request, 'music_form.html', {'form': form})
+    return render(request, 'music_form.html', {'form': form}) 
+
+def delete(request,music_id):
+    music = Music.objects.get(id=music_id)
+    music.delete()
+    return redirect('index')    
+
+def update(request, music_id):
+    music = Music.objects.get(id=music_id)
+    if request.method == 'POST':
+        form = MusicForm(request.POST, instance=music)
+        if form.is_valid():
+            form.save()
+            return redirect('index')  
+    else:
+        form = MusicForm(instance=music)
+
+    return render(request, 'update.html', {'form': form, 'music': music})
 
 def login_user(request):
     if request.method == 'POST':
@@ -176,24 +194,11 @@ def login_user(request):
     else:
         form = AuthenticationForm()
 
-    return render(request, 'form.html', {'form': form})    
+    return render(request, 'form.html', {'form': form})   
 
-def delete(request,music_id):
-    music = Music.objects.get(id=music_id)
-    music.delete()
-    return redirect('index')    
-
-def update(request, music_id):
-    music = Music.objects.get(id=music_id)
-    if request.method == 'POST':
-        form = MusicForm(request.POST, instance=music)
-        if form.is_valid():
-            form.save()
-            return redirect('index')  
-    else:
-        form = MusicForm(instance=music)
-
-    return render(request, 'update.html', {'form': form, 'music': music})
+def logout_page(request):
+    logout(request)
+    return redirect ('login')
 
 
 def register(request):
@@ -203,6 +208,11 @@ def register(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         
+        user = User.objects.filter(username = username)
+        if user.exists():
+            messages.info(request , 'Username already taken')
+            return redirect('register')
+        
         user = User.objects.create(
             first_name = first_name,
             last_name = last_name,
@@ -210,5 +220,6 @@ def register(request):
         )
         user.set_password(password)
         user.save()
+        messages.info(request, 'Account successfully created')
         return redirect('login')
     return render(request, 'register.html')
