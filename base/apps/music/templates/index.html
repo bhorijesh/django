@@ -135,6 +135,26 @@
         footer p {
             font-size: 1rem;
         }
+
+        .delete-btn {
+            color: white;
+            background-color: red;
+            border-radius: 4px;  /* Slightly more rounded */
+            padding: 6px 12px;   /* Smaller padding */
+            font-size: 14px;     /* Adjusted font size */
+            text-decoration: none;
+            display: inline-block; /* Make sure it's inline like a button */
+            text-align: center;    /* Center text */
+            border: none;          /* Remove border if present */
+            cursor: pointer;      /* Make it appear clickable */
+            transition: background-color 0.3s ease; /* Smooth hover effect */
+        }
+        
+        .delete-btn:hover {
+            background-color: darkred;  /* Darker red on hover */
+        }
+        
+        
     </style>
 </head>
 <body>
@@ -157,6 +177,7 @@
                 <li>
                     <a href="{% url 'music-detail' music.id %}">{{ music.title }}</a>
                     by {{ music.artist.name }}
+                    <a href="{% url 'delete' music.id %}" class="btn btn-danger delete-btn">Delete</a>
                 </li>
             {% empty %}
                 <p>No music records available.</p>

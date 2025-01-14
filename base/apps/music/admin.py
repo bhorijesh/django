@@ -3,7 +3,7 @@ from .models import Artist, Music
 
 
 # Register your models here.
-class MusicInline(admin.TabularInline):  # or use admin.StackedInline
+class MusicInline(admin.TabularInline):  
     model = Music
     extra = 1
 

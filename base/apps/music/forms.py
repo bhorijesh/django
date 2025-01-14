@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 class ArtistForm(forms.ModelForm):
     class Meta:
         model = Artist
-        fields = ['name', 'genre']
+        fields = ['name', 'genre','debut_date','bio']
 
 class MusicForm(forms.ModelForm):
     class Meta:
