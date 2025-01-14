@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Music</title>
+    <style>
+        /* Reset default browser styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        /* Heading styling */
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        /* Form styling */
+        form {
+            background-color: white;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Form fields styling */
+        form input, form select, form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        form input:focus, form select:focus, form textarea:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+
+        /* Button styling */
+        form button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #3498db;
+            color: white;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+
+        form button:hover {
+            background-color: #2980b9;
+        }
+
+        /* Error message styling */
+        .error {
+            background-color: #f2dede;
+            color: #a94442;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .error ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .error li {
+            margin-bottom: 5px;
+        }
+
+        /* Link styling */
+        a {
+            display: inline-block;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.1rem;
+            color: #3498db;
+            font-weight: bold;
+            text-decoration: none;
+            padding: 8px;
+            border-radius: 5px;
+            background-color: #ecf0f1;
+            transition: background-color 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #3498db;
+            color: white;
+        }
+
+        /* Margin and spacing for form fields */
+        form p {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Update Music Record</h1>
+    
+    <!-- Form with dynamic action URL -->
+    <form method="post" action="{% url 'update' music.id %}">
+        {% csrf_token %}
+
+        <!-- Error Messages -->
+        {% if form.errors %}
+            <div class="error">
+                <ul>
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        
+        <!-- Render form fields -->
+        <div>
+            <label for="{{ form.title.id_for_label }}">Title</label>
+            {{ form.title }}
+        </div>
+        
+        <div>
+            <label for="{{ form.artist.id_for_label }}">Artist</label>
+            {{ form.artist }}
+        </div>
+        
+        <div>
+            <label for="{{ form.album.id_for_label }}">Album</label>
+            {{ form.album }}# or wherever you want to redirect after the update
+        </div>
+        
+        <div>
+            <label for="{{ form.genre.id_for_label }}">Genre</label>
+            {{ form.genre }}
+        </div>
+        
+        <div>
+            <label for="{{ form.release_date.id_for_label }}">Release Date</label>
+            {{ form.release_date }}
+        </div>
+
+        <button type="submit" aria-label="Update music record">Update</button>
+    </form>
+
+    <!-- Link to go back to the music list -->
+    <a href="{% url 'index' %}">Back</a>
+</body>
+</html>

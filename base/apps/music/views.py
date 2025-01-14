@@ -181,3 +181,15 @@ def delete(request,music_id):
     music = Music.objects.get(id=music_id)
     music.delete()
     return redirect('index')    
+
+def update(request, music_id):
+    music = Music.objects.get(id=music_id)
+    if request.method == 'POST':
+        form = MusicForm(request.POST, instance=music)
+        if form.is_valid():
+            form.save()
+            return redirect('index')  
+    else:
+        form = MusicForm(instance=music)
+
+    return render(request, 'update.html', {'form': form, 'music': music})

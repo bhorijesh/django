@@ -178,6 +178,7 @@
                     <a href="{% url 'music-detail' music.id %}">{{ music.title }}</a>
                     by {{ music.artist.name }}
                     <a href="{% url 'delete' music.id %}" class="btn btn-danger delete-btn">Delete</a>
+                    <a href="{% url 'update' music.id %}" class="btn btn-success delete-btn">Edit</a>
                 </li>
             {% empty %}
                 <p>No music records available.</p>
