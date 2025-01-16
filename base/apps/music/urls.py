@@ -14,7 +14,7 @@ urlpatterns = [
     path('register/', register , name ='register'),
     path('logout/', logout_page , name ='logout_page' ),
     path('', login_user, name='login'),
-    path('', home, name='home'),  # Home page URL
+    path('', search, name='search'), 
     path('about/', about, name='about'),  # Example about page
     path('contact/',contact, name='contact'),  
 ]
