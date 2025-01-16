@@ -1,0 +1,16 @@
+{% extends 'base/base.html' %}
+
+{% block title %}{{ artist.name }} Details{% endblock %}
+
+{% block content %}
+    <h1>{{ artist.name }}</h1>
+    <p>Genre: {{ artist.genre }}</p>
+    <p>Albums: 
+        <ul>
+            {% for album in artist.albums.all %}
+                <li>{{ album.title }}</li>
+            {% endfor %}
+        </ul>
+    </p>
+    <a href="{% url 'artist-list' %}">Back to Artist List</a>
+{% endblock %}

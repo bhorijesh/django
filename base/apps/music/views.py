@@ -12,6 +12,7 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
+from templates import music
 
 # Artist List View (for listing all artists and creating a new artist)
 class ArtistListView(APIView):
@@ -19,7 +20,7 @@ class ArtistListView(APIView):
         # Force the rendering of HTML for browsers (regardless of the Accept header)
         if 'text/html' in request.META.get('HTTP_ACCEPT', '') or 'application/xhtml+xml' in request.META.get('HTTP_ACCEPT', ''):
             artists = Artist.objects.all()
-            return render(request, 'artist_list.html', {'artists': artists})  # HTML response
+            return render(request, 'music/artist_list.html', {'artists': artists})  # HTML response
         else:
             artists = Artist.objects.all()
             serializer = ArtistSerializer(artists, many=True)
@@ -44,7 +45,7 @@ class ArtistDetailView(APIView):
 
         # Force HTML rendering for browser requests (with Accept header checking)
         if 'text/html' in request.META.get('HTTP_ACCEPT', '') or 'application/xhtml+xml' in request.META.get('HTTP_ACCEPT', ''):
-            return render(request, 'artist_detail.html', {'artist': artist})  # HTML response for browser
+            return render(request, 'music/artist_detail.html', {'artist': artist})  # HTML response for browser
         else:
             serializer = ArtistSerializer(artist)
             return Response(serializer.data)  # JSON response for API clients
@@ -77,7 +78,7 @@ class MusicListView(APIView):
         # Force the rendering of HTML for browsers (regardless of Accept header)
         if 'text/html' in request.META.get('HTTP_ACCEPT', '') or 'application/xhtml+xml' in request.META.get('HTTP_ACCEPT', ''):
             music = Music.objects.all()
-            return render(request, 'music_list.html', {'music_list': music})  # HTML response for browser
+            return render(request, 'music/music_list.html', {'music_list': music})  # HTML response for browser
         else:
             music = Music.objects.all()
             serializer = MusicSerializer(music, many=True)
@@ -102,7 +103,7 @@ class MusicDetailView(APIView):
 
         # Force HTML rendering for browser requests (with Accept header checking)
         if 'text/html' in request.META.get('HTTP_ACCEPT', '') or 'application/xhtml+xml' in request.META.get('HTTP_ACCEPT', ''):
-            return render(request, 'music_detail.html', {'music': music})  # HTML response for browser
+            return render(request, 'music/music_detail.html', {'music': music})  # HTML response for browser
         else:
             serializer = MusicSerializer(music)
             return Response(serializer.data)  # JSON response for API clients
@@ -131,7 +132,7 @@ class MusicDetailView(APIView):
 @login_required
 def index(request):
     music = Music.objects.all()
-    return render(request, 'index.html', {'music_list': music})
+    return render(request, 'music/index.html', {'music_list': music})
 
 # Artist Creation View (for creating an artist through a form)
 @login_required
@@ -143,7 +144,7 @@ def artist_create(request):
             return redirect('artist-list')
     else:
         form = ArtistForm()
-    return render(request, 'artist_form.html', {'form': form})
+    return render(request, 'music/artist_form.html', {'form': form})
 
 
 # Music Creation View (for creating a music record through a form)
@@ -156,7 +157,7 @@ def music_create(request):
             return redirect('music-list')
     else:
         form = MusicForm()
-    return render(request, 'music_form.html', {'form': form}) 
+    return render(request, 'music/music_form.html', {'form': form}) 
 
 def delete(request,music_id):
     music = Music.objects.get(id=music_id)
@@ -173,7 +174,7 @@ def update(request, music_id):
     else:
         form = MusicForm(instance=music)
 
-    return render(request, 'update.html', {'form': form, 'music': music})
+    return render(request, 'music/update.html', {'form': form, 'music': music})
 
 def login_user(request):
     if request.method == 'POST':
@@ -194,7 +195,7 @@ def login_user(request):
     else:
         form = AuthenticationForm()
 
-    return render(request, 'form.html', {'form': form})   
+    return render(request, 'music/form.html', {'form': form})   
 
 def logout_page(request):
     logout(request)
@@ -222,4 +223,14 @@ def register(request):
         user.save()
         messages.info(request, 'Account successfully created')
         return redirect('login')
-    return render(request, 'register.html')
+    return render(request, 'music/register.html')
+    
+
+def home(request):
+    return render(request, 'home.html')
+
+def about(request):
+    return render(request, 'about.html')
+
+def contact(request):
+    return render(request, 'contact.html')

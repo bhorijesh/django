@@ -1,0 +1,196 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Music List{% endblock %}
+
+{% block extra_head %}
+    <style>
+        /* Custom styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #e0f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Header styling */
+        header {
+            background: linear-gradient(to right, #2c3e50, #3498db);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-bottom: 5px solid #3498db;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        nav ul {
+            list-style-type: none;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        nav ul li {
+            display: inline;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: white;
+            font-size: 1.2rem;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            background-color: #3498db;
+            transform: translateY(-2px);
+        }
+
+        /* Section styling */
+        section {
+            margin: 40px auto;
+            max-width: 900px;
+            padding: 30px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        section:hover {
+            transform: scale(1.02);
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            color: #2c3e50;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        ul li {
+            background: #9b59b6;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        ul li:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        ul li a {
+            text-decoration: none;
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.3rem;
+            display: block;
+            margin-bottom: 10px;
+            transition: color 0.3s ease;
+        }
+
+        ul li a:hover {
+            color: #3498db;
+        }
+
+        ul li p {
+            font-size: 1rem;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        /* Footer styling */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #2c3e50;
+            color: white;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+
+        footer p {
+            font-size: 1rem;
+        }
+
+        .delete-btn {
+            color: white;
+            background-color: red;
+            border-radius: 4px;  
+            padding: 6px 12px;   
+            font-size: 14px;     
+            text-decoration: none;
+            display: inline-block; 
+            text-align: center;    
+            border: none;          
+            cursor: pointer;      
+            transition: background-color 0.3s ease; 
+        }
+        
+        .delete-btn:hover {
+            background-color: darkred;  
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <header>
+        <nav class="navbar bg-body-tertiary">
+            <div class="container-fluid">
+                <div></div>
+                <a class="navbar-brand" href="{% url 'logout_page'  %}">Logout</a>
+            </div>
+        </nav> 
+        <h1>Welcome to the Music Collection</h1>         
+        <nav>
+            <ul>
+                <li><a href="{% url 'artist-list' %}">Artists</a></li>
+                <li><a href="{% url 'music-list' %}">Music</a></li>
+                <li><a href="{% url 'artist-create' %}">Add Artist</a></li>
+                <li><a href="{% url 'music-create' %}">Add Music</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section>
+        <h2>Music Collection</h2>
+        <ul>
+            {% for music in music_list %}
+                <li>
+                    <a href="{% url 'music-detail' music.id %}">{{ music.title }}</a>
+                    By {{ music.artist.name }}
+                    <a href="{% url 'delete' music.id %}" class="delete-btn">Delete</a>
+                    <a href="{% url 'update' music.id %}" class="delete-btn">Edit</a>
+                </li>
+            {% empty %}
+                <p>No music records available.</p>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Music Collection</p>
+    </footer>
+{% endblock %}
