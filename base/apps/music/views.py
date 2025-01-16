@@ -1,18 +1,17 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Artist, Music
+from .models import *
 from .serializers import ArtistSerializer, MusicSerializer
 from .forms import ArtistForm, MusicForm
 from django.contrib.auth import authenticate, login
-from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm 
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
-from templates import music
 
 # Artist List View (for listing all artists and creating a new artist)
 class ArtistListView(APIView):
@@ -159,7 +158,7 @@ def music_create(request):
         form = MusicForm()
     return render(request, 'music/music_form.html', {'form': form}) 
 
-def delete(request,music_id):
+def delete(request, music_id):
     music = Music.objects.get(id=music_id)
     music.delete()
     return redirect('index')    
@@ -199,7 +198,7 @@ def login_user(request):
 
 def logout_page(request):
     logout(request)
-    return redirect ('login')
+    return redirect('login')
 
 
 def register(request):
@@ -209,22 +208,22 @@ def register(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         
-        user = User.objects.filter(username = username)
+        user = User.objects.filter(username=username)
         if user.exists():
             messages.info(request , 'Username already taken')
             return redirect('register')
         
         user = User.objects.create(
-            first_name = first_name,
-            last_name = last_name,
-            username = username,
+            first_name=first_name,
+            last_name=last_name,
+            username=username,
         )
         user.set_password(password)
         user.save()
         messages.info(request, 'Account successfully created')
         return redirect('login')
     return render(request, 'music/register.html')
-    
+
 
 def search(request):
     return render(request, 'search.html')
@@ -234,3 +233,44 @@ def about(request):
 
 def contact(request):
     return render(request, 'contact.html')
+
+
+# View to list all playlists for the logged-in user
+@login_required
+def playlist_list(request):
+    playlists = Playlist.objects.filter(user=request.user)
+    return render(request, 'music/playlist_list.html', {'playlists': playlists})
+
+# View to create a new playlist
+# @login_required
+# def create_playlist(request):
+#     if request.method == 'POST':
+#         playlist_name = request.POST.get('name')
+#         if playlist_name:
+#             playlist = Playlist.objects.create(user=request.user, name=playlist_name)
+#             return redirect('playlist_detail', playlist_id=playlist.id)
+#         else:
+#             return HttpResponse("Please provide a playlist name.", status=400)
+#     return render(request, 'music/create_playlist.html')
+
+# View to see details of a specific playlist (including songs in it)
+@login_required
+def playlist_detail(request, playlist_id):
+    playlist = get_object_or_404(Playlist, id=playlist_id, user=request.user)
+    return render(request, 'playlists/playlist_detail.html', {'playlist': playlist})
+
+# View to add a song to a playlist
+@login_required
+def add_song_to_playlist(request, playlist_id):
+    playlist = get_object_or_404(Playlist, id=playlist_id, user=request.user)
+    
+    if request.method == 'POST':
+        song_ids = request.POST.getlist('songs')  # Get selected songs
+        songs = Music.objects.filter(id__in=song_ids)
+        playlist.songs.add(*songs)  # Add selected songs to playlist
+        
+        return redirect('playlist_detail', playlist_id=playlist.id)
+
+    # If GET request, display all songs to choose from
+    songs = Music.objects.all()
+    return render(request, 'music/add_song_to_playlist.html', {'playlist': playlist, 'songs': songs})

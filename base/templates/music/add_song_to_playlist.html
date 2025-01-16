@@ -1,0 +1,18 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+  <h1>Add Songs to Playlist: {{ playlist.name }}</h1>
+  <form method="post">
+    {% csrf_token %}
+    <h3>Select songs to add:</h3>
+    <ul>
+      {% for song in songs %}
+        <li>
+          <input type="checkbox" name="songs" value="{{ song.id }}">
+          {{ song.title }} by {{ song.artist }}
+        </li>
+      {% endfor %}
+    </ul>
+    <button type="submit">Add Selected Songs</button>
+  </form>
+{% endblock %}
