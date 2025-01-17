@@ -156,25 +156,7 @@
 {% endblock %}
 
 {% block content %}
-    <header>
-        <nav class="navbar bg-body-tertiary">
-            <div class="container-fluid">
-                <div></div>
-                <a class="navbar-brand" href="{% url 'logout_page'  %}">Logout</a>
-            </div>
-        </nav> 
-        <h1>Welcome to the Music Collection</h1>         
-        <nav>
-            <ul>
-                <li><a href="{% url 'artist-list' %}">Artists</a></li>
-                <li><a href="{% url 'music-list' %}">Music</a></li>
-                <li><a href="{% url 'artist-create' %}">Add Artist</a></li>
-                <li><a href="{% url 'music-create' %}">Add Music</a></li>
-                <li><a href="{% url 'playlist-list' %}">Playlist</a></li>
 
-            </ul>
-        </nav>
-    </header>
 
     <section>
         <h2>Music Collection</h2>

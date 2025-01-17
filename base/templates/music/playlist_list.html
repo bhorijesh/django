@@ -1,38 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Playlists</title>
-    <style>
-        /* Some basic styling */
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
-        .playlist {
-            margin-bottom: 20px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-        }
-        .playlist h3 {
-            margin-top: 0;
-        }
-        .playlist ul {
-            list-style-type: none;
-            padding-left: 0;
-        }
-        .playlist ul li {
-            margin: 5px 0;
-        }
-        .no-playlists {
-            color: #888;
-        }
-    </style>
-</head>
-<body>
+{% extends 'base/base.html' %}
+
+{% block content %}
     <h1>Your Playlists</h1>
 
     {% if playlists %}
@@ -54,5 +22,4 @@
     {% else %}
         <p class="no-playlists">You don't have any playlists yet. Start adding music!</p>
     {% endif %}
-</body>
-</html>
+{% endblock %}

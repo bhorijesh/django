@@ -8,34 +8,17 @@
     <title>{% block title %}My Django App{% endblock %}</title>
     
     <!-- Link to external CSS (adjust the path to your actual static file) -->
-    <link rel="stylesheet" href="{% static 'static/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'CSS/style.css' %}">
     
     {% block extra_head %}{% endblock %}  <!-- Custom head content if needed -->
 </head>
+
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href ="{% url 'search' %}">Search</a></li>
-                <li><a href="{% url 'logout_page' %}">Logout</a></li>
-                <!-- Add more links as needed --> 
-            </ul>
-        </nav>
-    </header>
+    {% include 'base/nav.html' %}
+    <div class="container full">
+      {% block content %} {% endblock %}
+    </div>
+    {% block script %} {% endblock %}
+  </body>
 
-    <main>
-        {% block content %}
-        <!-- Main content will be rendered here -->
-        {% endblock %}
-    </main>
-
-    <footer>
-        <p>&copy; 2025 My Django App. All rights reserved.</p>
-    </footer>
-    
-    <!-- Link to external JS (adjust the path to your actual static file) -->
-    <script src="{% static 'js/scripts.js' %}"></script>
-
-    {% block extra_js %}{% endblock %}  <!-- Custom JS content if needed -->
-</body>
 </html>
