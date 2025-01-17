@@ -4,8 +4,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import *
-from .serializers import ArtistSerializer, MusicSerializer
-from .forms import ArtistForm, MusicForm
+from .serializers import *
+from .forms import *
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import AuthenticationForm 
 from django.contrib.auth import logout
@@ -158,10 +158,16 @@ def music_create(request):
         form = MusicForm()
     return render(request, 'music/music_form.html', {'form': form}) 
 
-def delete(request, music_id):
+def delete(request, music_id,playlist_id):
     music = Music.objects.get(id=music_id)
     music.delete()
-    return redirect('index')    
+    return redirect('index')   
+
+def play_delete(request,playlist_id):
+    playlist = Playlist.objects.get(id=playlist_id)
+    playlist.delete() 
+    return redirect('index')   
+
 
 def update(request, music_id):
     music = Music.objects.get(id=music_id)
@@ -234,43 +240,26 @@ def about(request):
 def contact(request):
     return render(request, 'contact.html')
 
+class PlaylistView(APIView):
+    def get(self, request):
+        # Check if the request is for a browser (HTML request)
+        if 'text/html' in request.META.get('HTTP_ACCEPT', '') or 'application/xhtml+xml' in request.META.get('HTTP_ACCEPT', ''):
+            # Get the user's playlists (assuming only "My Playlist" for simplicity)
+            playlist = Playlist.objects.filter(user=request.user)  # Assuming each user has their own playlists
+            return render(request, 'music/playlist_list.html', {'playlists': playlist})
+        else:
+            # For API clients, return playlist data as JSON
+            playlists = Playlist.objects.filter(user=request.user)
+            serializer = PlaylistSerializer(playlists, many=True)
+            return Response(serializer.data)
 
-# View to list all playlists for the logged-in user
-@login_required
-def playlist_list(request):
-    playlists = Playlist.objects.filter(user=request.user)
-    return render(request, 'music/playlist_list.html', {'playlists': playlists})
+def playlist(request, music_id, user_id):
+    music = Music.objects.get(id=music_id)  # The music being viewed or modified
+    user = get_object_or_404(User, id=user_id)  # The user who owns the playlist
 
-# View to create a new playlist
-# @login_required
-# def create_playlist(request):
-#     if request.method == 'POST':
-#         playlist_name = request.POST.get('name')
-#         if playlist_name:
-#             playlist = Playlist.objects.create(user=request.user, name=playlist_name)
-#             return redirect('playlist_detail', playlist_id=playlist.id)
-#         else:
-#             return HttpResponse("Please provide a playlist name.", status=400)
-#     return render(request, 'music/create_playlist.html')
-
-# View to see details of a specific playlist (including songs in it)
-@login_required
-def playlist_detail(request, playlist_id):
-    playlist = get_object_or_404(Playlist, id=playlist_id, user=request.user)
-    return render(request, 'playlists/playlist_detail.html', {'playlist': playlist})
-
-# View to add a song to a playlist
-@login_required
-def add_song_to_playlist(request, playlist_id):
-    playlist = get_object_or_404(Playlist, id=playlist_id, user=request.user)
+    # Check if a playlist for the user already exists, or create one
+    playlist, created = Playlist.objects.get_or_create(user=user, name="My Playlist")
+    playlist.music.add(music)
     
-    if request.method == 'POST':
-        song_ids = request.POST.getlist('songs')  # Get selected songs
-        songs = Music.objects.filter(id__in=song_ids)
-        playlist.songs.add(*songs)  # Add selected songs to playlist
-        
-        return redirect('playlist_detail', playlist_id=playlist.id)
-
-    # If GET request, display all songs to choose from
-    songs = Music.objects.all()
-    return render(request, 'music/add_song_to_playlist.html', {'playlist': playlist, 'songs': songs})
+    # Redirect to the PlaylistView after adding the music
+    return redirect('playlist-list')

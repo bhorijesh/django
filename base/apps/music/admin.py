@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Artist, Music
+from .models import *
 
 
 # Register your models here.
@@ -16,5 +16,10 @@ class MusicAdmin(admin.ModelAdmin):
     list_display = ('title', 'artist', 'release_date', 'album', 'genre')
     search_fields = ('title', 'artist__name')
 
+class PlaylistAdmin(admin.ModelAdmin):
+    list_display = ('name', 'user')  
+    search_fields = ('name',)
+
+admin.site.register(Playlist, PlaylistAdmin)
 admin.site.register(Artist, ArtistAdmin)
 admin.site.register(Music, MusicAdmin)

@@ -27,7 +27,8 @@ class Music(models.Model):
 class Playlist(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     name = models.CharField(max_length=255)
-    songs = models.ManyToManyField(Music, related_name='playlists', blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    music = models.ManyToManyField(Music, related_name='playlists', blank=True)
 
     def __str__(self):
-        return self.name
+        return f"{self.name} - {self.user.username}"

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Artist, Music
+from .models import *
 from django.contrib.auth.models import User
 
 class ArtistForm(forms.ModelForm):
@@ -16,3 +16,10 @@ class authForm(forms.ModelForm):
     class Meta :
         model = User
         fields = ['username', 'password']
+
+class PlaylistForm(forms.ModelForm):
+    music = forms.ModelMultipleChoiceField(queryset=Music.objects.all(), widget=forms.CheckboxSelectMultiple)
+
+    class Meta:
+        model = Playlist
+        fields = ['user', 'name', 'music']

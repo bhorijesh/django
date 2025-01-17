@@ -10,6 +10,7 @@ urlpatterns = [
     path('music/create/', music_create, name='music-create'),
     path('music/<int:music_id>/', MusicDetailView.as_view(), name='music-detail'),
     path('delete/<int:music_id>/', delete , name = "delete"),
+    # path('delete/<int:playlist_id>/', play_delete , name = "delete_playlist"),
     path('update/<int:music_id>/', update , name = "update"),
     path('register/', register , name ='register'),
     path('logout/', logout_page , name ='logout_page' ),
@@ -17,9 +18,6 @@ urlpatterns = [
     path('', search, name='search'), 
     path('about/', about, name='about'),  # Example about page
     path('contact/',contact, name='contact'),  
-    path('playlists/', playlist_list, name='playlist_list'),  # List all playlists
-    # path('playlists/create/', create_playlist, name='create_playlist'),  # Create a new playlist
-    path('playlists/<int:playlist_id>/', playlist_detail, name='playlist_detail'),  # Playlist details
-    path('playlists/<int:playlist_id>/add_song/<int:music_id>', add_song_to_playlist, name='add_song_to_playlist'),  # Add song to playlist
-
+    path('playlist', PlaylistView.as_view(), name='playlist-list'),
+    path('playlist/<int:user_id>/<int:music_id>/', playlist, name='playlist_list'),
 ]
