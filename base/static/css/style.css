@@ -147,3 +147,28 @@ footer p {
 .delete-btn:hover {
     background-color: darkred;  
 }
+/* Ensure the navbar has relative positioning for the logout button positioning */
+.navbar {
+    position: relative;
+}
+
+/* Style for the logout button */
+.navbar-brand {
+    position: absolute;
+    top: 10px; /* Position from the top */
+    right: 10px; /* Position from the right */
+    background-color: #f44336; /* Red background */
+    color: white; /* White text */
+    padding: 5px 10px; /* Smaller padding for a compact button */
+    border-radius: 5px; /* Rounded corners */
+    text-decoration: none; /* Remove underline */
+    font-weight: bold; /* Bold text */
+    font-size: 12px; /* Smaller text */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition effect */
+}
+
+/* Hover effect for the logout button */
+.navbar-brand:hover {
+    background-color: #d32f2f; /* Darker red when hovered */
+    color: white; /* White text when hovered */
+}

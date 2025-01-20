@@ -137,7 +137,7 @@ def index(request):
 @login_required
 def artist_create(request):
     if request.method == 'POST':
-        form = ArtistForm(request.POST)
+        form = ArtistForm(request.POST,request.FILES)
         if form.is_valid():
             form.save()
             return redirect('artist-list')
@@ -150,7 +150,7 @@ def artist_create(request):
 @login_required
 def music_create(request):
     if request.method == 'POST':
-        form = MusicForm(request.POST)
+        form = MusicForm(request.POST,request.FILES)
         if form.is_valid():
             form.save()
             return redirect('music-list')
@@ -158,7 +158,7 @@ def music_create(request):
         form = MusicForm()
     return render(request, 'music/music_form.html', {'form': form}) 
 
-def delete(request, music_id,playlist_id):
+def delete(request, music_id):
     music = Music.objects.get(id=music_id)
     music.delete()
     return redirect('index')   

@@ -3,171 +3,40 @@
 {% block title %}Music List{% endblock %}
 
 {% block extra_head %}
-    <style>
-        /* Custom styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        /* Body styling */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #e0f7fa;
-            color: #333;
-            line-height: 1.6;
-        }
-
-        /* Header styling */
-        header {
-            background: linear-gradient(to right, #2c3e50, #3498db);
-            color: white;
-            padding: 30px;
-            text-align: center;
-            border-bottom: 5px solid #3498db;
-        }
-
-        header h1 {
-            font-size: 3rem;
-            margin-bottom: 10px;
-        }
-
-        nav ul {
-            list-style-type: none;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-        }
-
-        nav ul li {
-            display: inline;
-        }
-
-        nav ul li a {
-            text-decoration: none;
-            color: white;
-            font-size: 1.2rem;
-            padding: 10px 20px;
-            border-radius: 8px;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-
-        nav ul li a:hover {
-            background-color: #3498db;
-            transform: translateY(-2px);
-        }
-
-        /* Section styling */
-        section {
-            margin: 40px auto;
-            max-width: 900px;
-            padding: 30px;
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-        }
-
-        section:hover {
-            transform: scale(1.02);
-        }
-
-        h2 {
-            font-size: 2.5rem;
-            margin-bottom: 30px;
-            color: #2c3e50;
-            text-align: center;
-            font-weight: bold;
-        }
-
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        ul li {
-            background: #9b59b6;
-            border-radius: 10px;
-            margin-bottom: 25px;
-            padding: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        ul li:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        ul li a {
-            text-decoration: none;
-            color: #fff;
-            font-weight: bold;
-            font-size: 1.3rem;
-            display: block;
-            margin-bottom: 10px;
-            transition: color 0.3s ease;
-        }
-
-        ul li a:hover {
-            color: #3498db;
-        }
-
-        ul li p {
-            font-size: 1rem;
-            color: #fff;
-            margin-bottom: 10px;
-        }
-
-        /* Footer styling */
-        footer {
-            text-align: center;
-            padding: 20px;
-            background-color: #2c3e50;
-            color: white;
-            position: fixed;
-            width: 100%;
-            bottom: 0;
-        }
-
-        footer p {
-            font-size: 1rem;
-        }
-
-        .delete-btn {
-            color: white;
-            background-color: red;
-            border-radius: 4px;  
-            padding: 6px 12px;   
-            font-size: 14px;     
-            text-decoration: none;
-            display: inline-block; 
-            text-align: center;    
-            border: none;          
-            cursor: pointer;      
-            transition: background-color 0.3s ease; 
-        }
-        
-        .delete-btn:hover {
-            background-color: darkred;  
-        }
-    </style>
 {% endblock %}
 
 {% block content %}
-
-
     <section>
         <h2>Music Collection</h2>
         <ul>
             {% for music in music_list %}
-                <li>
+                <li class="music-item">
+                    <!-- Artist Image -->
+                    {% if music.artist.image %}
+                        <img src="{{ music.artist.image.url }}" alt="{{ music.artist.name }}" class="artist-image">
+                    {% else %}
+                        <span>No image</span>
+                    {% endif %}
+
+                    <!-- Music Details -->
                     <a href="{% url 'music-detail' music.id %}">{{ music.title }}</a>
-                    By {{ music.artist.name }}
-                    <a href="{% url 'delete' music.id %}" class="delete-btn">Delete</a>
-                    <a href="{% url 'update' music.id %}" class="delete-btn">Edit</a>
-                    <a href="{% url 'playlist_list' music_id=music.id user_id=user.id %}" class="delete-btn">Add to playlist</a>
+                    By <a href="{% url 'artist-detail' music.artist.id %}">{{ music.artist.name }}</a>
+                    
+                    <!-- Music Actions -->
+                    <a href="{% url 'delete' music.id %}" class="action-btn">Delete</a>
+                    <a href="{% url 'update' music.id %}" class="action-btn">Edit</a>
+                    <a href="{% url 'playlist_list' music_id=music.id user_id=user.id %}" class="action-btn">To Playlist</a>
+
+                    <!-- Audio Player -->
+                    {% if music.audio %}
+                        <br>
+                        <audio controls>
+                            <source src="{{ music.audio.url }}" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    {% else %}
+                        <p>No audio available</p>
+                    {% endif %}
                 </li>
             {% empty %}
                 <p>No music records available.</p>
@@ -178,4 +47,102 @@
     <footer>
         <p>&copy; 2025 Music Collection</p>
     </footer>
+
+    <style>
+        /* Music item styling */
+        .music-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        /* Hover effect for each music item */
+        .music-item:hover {
+            background-color: #e8e8e8;
+            transform: translateY(-5px);
+        }
+
+        /* Artist image styling */
+        .artist-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px; /* Rounded edges like album covers */
+            object-fit: cover;
+            margin-right: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        /* Artist image hover effect */
+        .artist-image:hover {
+            transform: scale(1.1);
+        }
+
+        /* Music title and artist link styling */
+        .music-item a {
+            font-size: 18px;
+            font-weight: bold;
+            text-decoration: none;
+            color: #333;
+            transition: color 0.3s ease;
+        }
+
+        /* Hover effect for music title and artist */
+        .music-item a:hover {
+            color: #0056b3;
+        }
+
+        /* Action buttons (Edit, Delete, Add to playlist) */
+        .action-btn {
+            margin-left: 15px;
+            padding: 5px 10px;
+            background-color: #f44336; /* Red for delete */
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .action-btn:hover {
+            background-color: #d32f2f;
+        }
+
+        .action-btn:nth-child(2) {
+            background-color: #4caf50; /* Green for edit */
+        }
+
+        .action-btn:nth-child(3) {
+            background-color: #2196f3; /* Blue for add to playlist */
+        }
+
+        .action-btn:nth-child(2):hover {
+            background-color: #388e3c;
+        }
+
+        .action-btn:nth-child(3):hover {
+            background-color: #1976d2;
+        }
+
+        /* Audio player styling */
+        audio {
+            margin-top: 10px;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        /* No image fallback text */
+        .music-item span {
+            color: #888;
+        }
+
+        /* Styling for list */
+        ul {
+            padding: 0;
+            list-style-type: none;
+        }
+    </style>
 {% endblock %}

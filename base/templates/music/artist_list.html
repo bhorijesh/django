@@ -4,12 +4,60 @@
 
 {% block content %}
     <h1>Artists</h1>
-    <ul>
+
+    <style>
+        .artist-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 10px;
+            list-style-type: none;
+        }
+
+        .artist-card {
+            width: 220px;
+            text-align: center;
+            background: #9b59b6;
+            padding: 15px;
+            border-radius: 10px;
+            color: white;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .artist-card img {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .artist-card a {
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+    </style>
+
+    <ul class="artist-list">
         {% for artist in artists %}
-            <li><a href="{% url 'artist-detail' artist.id %}">{{ artist.name }}</a></li>
+            <li class="artist-card">
+                <a href="{% url 'artist-detail' artist.id %}">
+                    {% if artist.image %}
+                        <img src="{{ artist.image.url }}" alt="{{ artist.name }}">
+                    {% else %}
+                        <span>No image</span>
+                    {% endif %}
+                    <p>{{ artist.name }}</p>
+                </a>
+            </li>
         {% empty %}
             <p>No artists available.</p>
         {% endfor %}
     </ul>
+
     <a href="{% url 'artist-create' %}">Add New Artist</a>
 {% endblock %}

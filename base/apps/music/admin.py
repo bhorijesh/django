@@ -9,11 +9,11 @@ class MusicInline(admin.TabularInline):
 
 class ArtistAdmin(admin.ModelAdmin):
     inlines = [MusicInline]
-    list_display = ('name', 'genre', 'debut_date')
+    list_display = ('name', 'genre', 'debut_date','image')
     search_fields = ('name', 'genre')
 
 class MusicAdmin(admin.ModelAdmin):
-    list_display = ('title', 'artist', 'release_date', 'album', 'genre')
+    list_display = ('title', 'artist', 'release_date', 'album', 'genre','audio')
     search_fields = ('title', 'artist__name')
 
 class PlaylistAdmin(admin.ModelAdmin):

@@ -1,5 +1,7 @@
 from django.urls import path
 from .views import *
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('index/', index, name='index'),
@@ -18,6 +20,6 @@ urlpatterns = [
     path('', search, name='search'), 
     path('about/', about, name='about'),  # Example about page
     path('contact/',contact, name='contact'),  
-    path('playlist', PlaylistView.as_view(), name='playlist-list'),
+    path('playlist/', PlaylistView.as_view(), name='playlist-list'),
     path('playlist/<int:user_id>/<int:music_id>/', playlist, name='playlist_list'),
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

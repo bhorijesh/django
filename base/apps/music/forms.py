@@ -5,12 +5,12 @@ from django.contrib.auth.models import User
 class ArtistForm(forms.ModelForm):
     class Meta:
         model = Artist
-        fields = ['name', 'genre','debut_date','bio']
+        fields = ['name', 'genre','debut_date','bio','image']
 
 class MusicForm(forms.ModelForm):
     class Meta:
         model = Music
-        fields = ['title', 'artist', 'genre', 'release_date']
+        fields = ['title', 'artist', 'genre', 'release_date','audio']
 
 class authForm(forms.ModelForm):
     class Meta :

@@ -1,25 +1,111 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
-    <h1>Your Playlists</h1>
+    <style>
+        /* General styling for the block content */
+        .block_content {
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f9f9;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 1000px;
+            margin: 20px auto;
+            color: #333;
+            box-sizing: border-box;
+        }
 
-    {% if playlists %}
-        {% for playlist in playlists %}
-            <div class="playlist">
-                <h3>{{ playlist.name }}</h3>
-                <h4>Music:</h4>
-                <ul>
-                    {% if playlist.music.all %}
-                        {% for song in playlist.music.all %}
-                            <li>{{ song.title }} by {{ song.artist }}</li>
-                        {% endfor %}
-                    {% else %}
-                        <li>No music in this playlist yet.</li>
-                    {% endif %}
-                </ul>
-            </div>
-        {% endfor %}
-    {% else %}
-        <p class="no-playlists">You don't have any playlists yet. Start adding music!</p>
-    {% endif %}
+        /* Title styling */
+        .block_content h1 {
+            font-size: 2.5em;
+            color: #4A90E2;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* Playlist container styling */
+        .playlist {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Playlist title styling */
+        .playlist h3 {
+            font-size: 1.8em;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        /* Music list styling */
+        .playlist ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .playlist ul li {
+            font-size: 1.1em;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        /* Audio player styling */
+        .playlist audio {
+            margin-top: 10px;
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        /* Message for no playlists */
+        .no-playlists {
+            text-align: center;
+            font-size: 1.2em;
+            color: #d9534f;
+        }
+
+        /* Styling for 'No audio available' message */
+        .no-audio {
+            color: #d9534f;
+            font-style: italic;
+        }
+    </style>
+
+    <div class="block_content">
+        <h1>Your Playlists</h1>
+
+        {% if playlists %}
+            {% for playlist in playlists %}
+                <div class="playlist">
+                    <h3>{{ playlist.name }}</h3>
+                    <h4>Music:</h4>
+                    <ul>
+                        {% if playlist.music.all %}
+                            {% for song in playlist.music.all %}
+                                <li>{{ song.title }} by {{ song.artist }}</li>
+                                
+                                <!-- Check if song.audio exists -->
+                                {% if song.audio %}
+                                    <br>
+                                    <audio controls>
+                                        <source src="{{ song.audio.url }}" type="audio/mpeg">
+                                        Your browser does not support the audio element.
+                                    </audio>
+                                {% else %}
+                                    <p class="no-audio">No audio available for {{ song.title }}</p>
+                                {% endif %}
+                                
+                            {% endfor %}
+                        {% else %}
+                            <li>No music in this playlist yet.</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="no-playlists">You don't have any playlists yet. Start adding music!</p>
+        {% endif %}
+    </div>
 {% endblock %}
