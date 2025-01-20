@@ -232,13 +232,20 @@ def register(request):
 
 
 def search(request):
-    return render(request, 'search.html')
+    query = request.GET.get('q', '')
+    if query:
+        # Perform search based on the query
+        music_results = Music.objects.filter(title__icontains=query)
+        artist_results = Artist.objects.filter(name__icontains=query)
+    else:
+        music_results = []
+        artist_results = []
 
-def about(request):
-    return render(request, 'about.html')
-
-def contact(request):
-    return render(request, 'contact.html')
+    return render(request, 'music/search.html', {
+        'music_results': music_results,
+        'artist_results': artist_results,
+        'query': query,
+    })
 
 class PlaylistView(APIView):
     def get(self, request):

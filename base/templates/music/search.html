@@ -1,0 +1,132 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Search Results</h1>
+
+        <div class="row justify-content-center mb-4">
+            <div class="col-md-6">
+                <form method="GET" action="{% url 'search' %}" class="d-flex">
+                    <input type="text" name="q" value="{{ query }}" class="form-control me-2" placeholder="Search for music or artists">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </form>
+            </div>
+        </div>
+
+        {% if query %}
+            <h3 class="mb-4">Results for "{{ query }}"</h3>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>Music:</h4>
+                    <ul class="list-group">
+                        {% for music in music_results %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ music.title }} by {{ music.artist.name }}
+                            </li>
+                        {% empty %}
+                            <li class="list-group-item">No music found.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="col-md-6">
+                    <h4>Artists:</h4>
+                    <ul class="list-group">
+                        {% for artist in artist_results %}
+                            <li class="list-group-item">{{ artist.name }}</li>
+                        {% empty %}
+                            <li class="list-group-item">No artists found.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        {% else %}
+            <p class="text-center mt-4">Enter a search query to get started.</p>
+        {% endif %}
+    </div>
+{% endblock %}
+{% block extra_css %}
+    <style>
+        /* General Body Styles */
+        body {
+            background-color: #f8f9fa; /* Light background color */
+            font-family: 'Arial', sans-serif; /* Clean font */
+        }
+
+        /* Header Styles */
+        h1, h3 {
+            color: #333; /* Dark text color for header */
+            font-weight: bold;
+        }
+
+        h4 {
+            color: #007bff; /* Blue color for sub-headers */
+            font-weight: 500;
+        }
+
+        /* Input & Button Styling */
+        .form-control {
+            padding: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            padding: 0.8rem 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        /* List Group Styling */
+        .list-group-item {
+            font-size: 1.1rem;
+            padding: 1rem;
+            border-radius: 5px;
+        }
+
+        .list-group-item:hover {
+            background-color: #e9ecef;
+        }
+
+        .list-group-item d-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Centering text */
+        .text-center {
+            text-align: center;
+        }
+
+        /* Spacing */
+        .mt-5 {
+            margin-top: 3rem;
+        }
+
+        .mb-4 {
+            margin-bottom: 1.5rem;
+        }
+
+        .me-2 {
+            margin-right: 0.5rem;
+        }
+
+        /* Responsive Design */
+        .container {
+            max-width: 960px;
+        }
+
+        /* Footer or Bottom Message Styling */
+        p {
+            font-size: 1.1rem;
+        }
+
+    </style>
+{% endblock %}

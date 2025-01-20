@@ -6,14 +6,17 @@
     </nav> 
     <h1>Welcome to the Music Collection</h1>         
     <nav>
-        <ul>
+        <ul class="navbar-nav">
             <li><a href="{% url 'index' %}">Home</a></li>
             <li><a href="{% url 'artist-list' %}">Artists</a></li>
             <li><a href="{% url 'music-list' %}">Music</a></li>
             <li><a href="{% url 'playlist-list' %}">Playlist</a></li>
-            <a class="navbar-brand ms-auto" href="{% url 'logout_page'  %}">Logout</a>
-            
         </ul>
+        <a class="navbar-brand ms-auto" href="{% url 'logout_page' %}">Logout</a>
+        <!-- Correcting the action URL here -->
+        <form class="d-flex ms-3" method="GET" action="{% url 'search' %}">
+            <input class="form-control me-2" type="search" placeholder="Search for music or artists" aria-label="Search" name="q">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
     </nav>
-  </header>
-  
+</header>
