@@ -1,84 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Music List</title>
-    <style>
-        /* Reset some default browser styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+{% extends 'base/base.html' %}
 
-        /* Body styling */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-        }
-
-        /* Heading styling */
-        h1 {
-            text-align: center;
-            font-size: 2.5rem;
-            color: #2c3e50;
-            margin-bottom: 20px;
-        }
-
-        /* List styling */
-        ul {
-            list-style-type: none;
-            padding: 0;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        ul li {
-            background-color: #ecf0f1;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            font-size: 1.2rem;
-        }
-
-        ul li a {
-            text-decoration: none;
-            color: #3498db;
-            font-weight: bold;
-            transition: color 0.3s ease;
-        }
-
-        ul li a:hover {
-            color: #2c3e50;
-        }
-
-        /* Link for adding new music */
-        a {
-            display: block;
-            text-align: center;
-            margin-top: 30px;
-            font-size: 1.2rem;
-            color: #3498db;
-            font-weight: bold;
-            text-decoration: none;
-            padding: 10px;
-            background-color: #ecf0f1;
-            border-radius: 8px;
-            transition: background-color 0.3s ease;
-        }
-
-        a:hover {
-            background-color: #3498db;
-            color: white;
-        }
-    </style>
-</head>
-<body>
+{% block content %}
     <h1>Music</h1>
     <ul>
         {% for music in music_list %}
@@ -86,5 +8,4 @@
         {% endfor %}
     </ul>
     <a href="{% url 'music-create' %}">Add New Music</a>
-</body>
-</html>
+{% endblock %}

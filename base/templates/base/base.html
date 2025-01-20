@@ -1,4 +1,4 @@
-{% load static %} 
+{% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -7,10 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}My Django App{% endblock %}</title>
     
-    <!-- Link to external CSS (adjust the path to your actual static file) -->
-    <link rel="stylesheet" href="{% static 'CSS/style.css' %}">
+    <!-- Link to external CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     
-    {% block extra_head %}{% endblock %}  <!-- Custom head content if needed -->
+    {% block extra_head %}{% endblock %}
 </head>
 
 <body>
@@ -19,6 +19,5 @@
       {% block content %} {% endblock %}
     </div>
     {% block script %} {% endblock %}
-  </body>
-
+</body>
 </html>
