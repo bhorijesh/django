@@ -2,147 +2,199 @@
 
 {% block title %}Music List{% endblock %}
 
-{% block extra_head %}
-{% endblock %}
-
 {% block content %}
-    <section>
-        <h2>Music Collection</h2>
-        <ul>
+    <section class="music-section">
+        <h2 class="section-title">Music Collection</h2>
+        <ul class="music-list">
             {% for music in music_list %}
                 <li class="music-item">
                     <!-- Artist Image -->
                     {% if music.artist.image %}
                         <img src="{{ music.artist.image.url }}" alt="{{ music.artist.name }}" class="artist-image">
                     {% else %}
-                        <span>No image</span>
+                        <span class="no-image">No image</span>
                     {% endif %}
 
                     <!-- Music Details -->
-                    <a href="{% url 'music-detail' music.id %}">{{ music.title }}</a>
-                    By <a href="{% url 'artist-detail' music.artist.id %}">{{ music.artist.name }}</a>
+                    <div class="music-details">
+                        <a href="{% url 'music-detail' music.id %}" class="music-title">{{ music.title }}</a>
+                        <a href="{% url 'artist-detail' music.artist.id %}" class="artist-name">{{ music.artist.name }}</a>
+                    </div>
                     
                     <!-- Music Actions -->
-                    <a href="{% url 'delete' music.id %}" class="action-btn">Delete</a>
-                    <a href="{% url 'update' music.id %}" class="action-btn">Edit</a>
-                    <a href="{% url 'playlist_list' music_id=music.id user_id=user.id %}" class="action-btn">To Playlist</a>
+                    <div class="music-actions">
+                        <a href="{% url 'delete' music.id %}" class="action-btn delete-btn">Delete</a>
+                        <a href="{% url 'update' music.id %}" class="action-btn edit-btn">Edit</a>
+                        <a href="{% url 'playlist_list' music_id=music.id user_id=user.id %}" class="action-btn playlist-btn">To Playlist</a>
+                    </div>
 
                     <!-- Audio Player -->
                     {% if music.audio %}
-                        <br>
-                        <audio controls>
+                        <audio controls class="audio-player">
                             <source src="{{ music.audio.url }}" type="audio/mpeg">
                             Your browser does not support the audio element.
                         </audio>
                     {% else %}
-                        <p>No audio available</p>
+                        <p class="no-audio">No audio available</p>
                     {% endif %}
                 </li>
             {% empty %}
-                <p>No music records available.</p>
+                <p class="no-music">No music records available.</p>
             {% endfor %}
         </ul>
     </section>
 
-    <footer>
+    <footer class="footer">
         <p>&copy; 2025 Music Collection</p>
     </footer>
 
     <style>
-        /* Music item styling */
-        .music-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            padding: 15px;
-            background-color: #f9f9f9;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: background-color 0.3s ease, transform 0.3s ease;
+        /* General Section */
+        .music-section {
+            padding: 30px;
+            background-color: #f0f0f0;
         }
 
-        /* Hover effect for each music item */
+        .section-title {
+            font-size: 2.5rem;
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .music-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .music-item {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.3s ease;
+            font-family: 'Roboto', sans-serif;
+        }
+
         .music-item:hover {
-            background-color: #e8e8e8;
-            transform: translateY(-5px);
+            transform: translateY(-8px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         }
 
         /* Artist image styling */
         .artist-image {
-            width: 60px;
-            height: 60px;
-            border-radius: 8px; /* Rounded edges like album covers */
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
             object-fit: cover;
-            margin-right: 20px;
+            margin-bottom: 20px;
             transition: transform 0.3s ease;
         }
 
-        /* Artist image hover effect */
         .artist-image:hover {
             transform: scale(1.1);
         }
 
-        /* Music title and artist link styling */
-        .music-item a {
+        /* No image fallback text */
+        .no-image {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .music-details {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .music-title, .artist-name {
             font-size: 18px;
             font-weight: bold;
             text-decoration: none;
             color: #333;
+            display: block;
+            margin-bottom: 5px;
             transition: color 0.3s ease;
         }
 
-        /* Hover effect for music title and artist */
-        .music-item a:hover {
-            color: #0056b3;
+        .music-title:hover, .artist-name:hover {
+            color: #1e90ff;
         }
 
-        /* Action buttons (Edit, Delete, Add to playlist) */
+        /* Action buttons */
+        .music-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
         .action-btn {
-            margin-left: 15px;
-            padding: 5px 10px;
-            background-color: #f44336; /* Red for delete */
-            color: white;
+            padding: 8px 15px;
             border-radius: 5px;
             text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
             transition: background-color 0.3s ease;
+            display: inline-block;
         }
 
-        .action-btn:hover {
+        .delete-btn {
+            background-color: #f44336;
+        }
+
+        .delete-btn:hover {
             background-color: #d32f2f;
         }
 
-        .action-btn:nth-child(2) {
-            background-color: #4caf50; /* Green for edit */
+        .edit-btn {
+            background-color: #4caf50;
         }
 
-        .action-btn:nth-child(3) {
-            background-color: #2196f3; /* Blue for add to playlist */
-        }
-
-        .action-btn:nth-child(2):hover {
+        .edit-btn:hover {
             background-color: #388e3c;
         }
 
-        .action-btn:nth-child(3):hover {
+        .playlist-btn {
+            background-color: #2196f3;
+        }
+
+        .playlist-btn:hover {
             background-color: #1976d2;
         }
 
         /* Audio player styling */
-        audio {
-            margin-top: 10px;
+        .audio-player {
             width: 100%;
-            max-width: 300px;
+            max-width: 320px;
+            margin-top: 10px;
         }
 
-        /* No image fallback text */
-        .music-item span {
-            color: #888;
+        .no-audio {
+            font-size: 14px;
+            color: #777;
+            text-align: center;
         }
 
-        /* Styling for list */
-        ul {
-            padding: 0;
-            list-style-type: none;
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 15px 0;
+            background-color: #333;
+            color: white;
+            font-size: 14px;
+        }
+
+        .footer p {
+            margin: 0;
         }
     </style>
 {% endblock %}

@@ -1,105 +1,179 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
-    <h1>Music</h1>
-    <ul>
+    <h1 class="page-title">Music</h1>
+    <ul class="music-list">
         {% for music in music_list %}
             <li class="music-item">
                 <!-- Artist Image -->
                 {% if music.artist.image %}
                     <img src="{{ music.artist.image.url }}" alt="{{ music.artist.name }}" class="artist-image">
                 {% else %}
-                    <span>No image</span>
+                    <span class="no-image-text">No image</span>
                 {% endif %}
                 
                 <!-- Music Details -->
-                <a href="{% url 'music-detail' music.id %}">{{ music.title }}</a>                             
-                <a href="{% url 'artist-detail' music.artist.id %}">{{ music.artist.name }}</a>
+                <div class="music-details">
+                    <a href="{% url 'music-detail' music.id %}" class="music-title">{{ music.title }}</a>
+                    <a href="{% url 'artist-detail' music.artist.id %}" class="artist-name">{{ music.artist.name }}</a>
+                </div>
 
                 <!-- Audio Player -->
                 {% if music.audio %}
-                    <br>
-                    <audio controls>
+                    <audio controls class="audio-player">
                         <source src="{{ music.audio.url }}" type="audio/mpeg">
                         Your browser does not support the audio element.
                     </audio>
                 {% else %}
-                    <p>No audio available</p>
+                    <p class="no-audio-text">No audio available</p>
                 {% endif %}
             </li>
         {% empty %}
-            <p>No music available.</p>
+            <p class="no-music-text">No music available.</p>
         {% endfor %}
     </ul>
-    
-    <a href="{% url 'music-create' %}">Add New Music</a>
+
+    <div class="add-new-music">
+        <a href="{% url 'music-create' %}" class="add-new-btn">Add New Music</a>
+    </div>
 
     <style>
-        /* Style the music item list */
-        .music-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            padding: 10px;
-            background-color: #f9f9f9;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: background-color 0.3s ease, transform 0.3s ease;
-            margin-left: 10px;
-            margin-right: 10px;
+        /* General page styling */
+        .page-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 40px;
+            font-family: 'Arial', sans-serif;
         }
 
-        /* Hover effect for each music item */
+        /* List styling */
+        .music-list {
+            padding: 0;
+            list-style-type: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        /* Music item styling */
+        .music-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            margin: 0 10px;
+        }
+
+        /* Hover effect for music item */
         .music-item:hover {
-            background-color: #e8e8e8;
+            background-color: #f0f0f0;
             transform: translateY(-5px);
         }
 
         /* Styling for artist image */
         .artist-image {
-            width: 50px; /* Adjust size */
-            height: 50px;
-            border-radius: 8px; /* Rounded corners like album cover */
-            object-fit: cover;  /* Ensure proper aspect ratio */
-            margin-right: 15px; /* Space between image and text */
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
             transition: transform 0.3s ease;
         }
 
-        /* Artist image hover effect */
+        /* Hover effect for artist image */
         .artist-image:hover {
-            transform: scale(1.1); /* Slight scale-up effect */
-        }
-
-        /* Music title and artist link styling */
-        .music-item a {
-            font-size: 18px;
-            font-weight: bold;
-            text-decoration: none;
-            color: #333;
-            transition: color 0.3s ease;
-        }
-
-        /* Hover effect for music title and artist */
-        .music-item a:hover {
-            color: #0056b3;
-        }
-
-        /* Audio player container */
-        audio {
-            margin-top: 10px;
-            width: 100%;
-            max-width: 300px;
+            transform: scale(1.1);
         }
 
         /* No image fallback text */
-        .music-item span {
+        .no-image-text {
             color: #888;
+            font-size: 14px;
+            margin-bottom: 15px;
         }
 
-        /* Add some spacing around the list items */
-        ul {
-            padding: 0;
-            list-style-type: none;
+        /* Music details container */
+        .music-details {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .music-title, .artist-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .music-title:hover, .artist-name:hover {
+            color: #1e90ff;
+        }
+
+        /* Audio player styling */
+        .audio-player {
+            width: 100%;
+            max-width: 300px;
+            margin-top: 15px;
+        }
+
+        /* Text for unavailable audio */
+        .no-audio-text {
+            color: #777;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        /* Styling for no music available */
+        .no-music-text {
+            text-align: center;
+            font-size: 16px;
+            color: #777;
+        }
+
+        /* Add new music button */
+        .add-new-music {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .add-new-btn {
+            padding: 12px 20px;
+            background-color: #4caf50;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .add-new-btn:hover {
+            background-color: #388e3c;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .music-item {
+                padding: 10px;
+            }
+
+            .music-title, .artist-name {
+                font-size: 16px;
+            }
+
+            .audio-player {
+                max-width: 100%;
+            }
         }
     </style>
 {% endblock %}
+
