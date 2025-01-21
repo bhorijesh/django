@@ -268,11 +268,55 @@ class PlaylistView(APIView):
             playlists = Playlist.objects.filter(user=request.user)
             serializer = PlaylistSerializer(playlists, many=True)
             return Response(serializer.data)
-class playlist(ListView):
-    model = Playlist
-    template_name = 'musicl/playlist_list.html'
-    context_object_name ='playlist'
+# class playlist(ListView):
+#     model = Playlist
+#     template_name = 'musicl/playlist_list.html'
+#     context_object_name ='playlist'
 
-    def get_queryset(self):
-        return Playlist.objects.filter(user=self.request.user)
+#     def get_queryset(self):
+#         return Playlist.objects.filter(user=self.request.user)
+
+class PlaylistCreateView(CreateView):
+    model = Playlist
+    form_class = PlaylistForm
+    template_name = 'music/playlist_create.html'  # Your template for creating the playlist
+    context_object_name = 'form'
     
+    def form_valid(self, form):
+        form.instance.user = self.request.user  # Set the user to the current logged-in user
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        # Redirect to the playlist list page after successfully creating the playlist
+        return reverse_lazy('playlist-list')
+    
+class AddToPlaylistView(FormView):
+    template_name = 'music/select_playlist.html'
+    form_class = AddToPlaylistForm
+
+    def dispatch(self, request, *args, **kwargs):
+        # Get the music object from the URL and the user
+        self.music = get_object_or_404(Music, id=self.kwargs['music_id'])
+        self.user = get_object_or_404(User, id=self.kwargs['user_id'])  # Ensure you have the User model
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['music'] = self.music
+        context['playlists'] = Playlist.objects.filter(user=self.user)
+        return context
+
+    def form_valid(self, form):
+        # Get the selected playlist ID from the form
+        playlist_id = form.cleaned_data['playlist_id']
+        playlist = get_object_or_404(Playlist, id=playlist_id)
+
+        # Add the music to the playlist
+        playlist.music.add(self.music)
+
+        # Redirect to a success page or playlist page
+        return redirect('playlist_list')  # Update the redirect URL based on your needs
+
+    def form_invalid(self, form):
+        # Handle the case where the form is invalid
+        return self.render_to_response(self.get_context_data(form=form))

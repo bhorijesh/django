@@ -33,3 +33,25 @@ class RegisterForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'username', 'password1' ]
+
+class PlaylistForm(forms.ModelForm):
+    class Meta:
+        model = Playlist
+        fields = ['name'] 
+
+class PlaylistForm(forms.ModelForm):
+    music = forms.ModelMultipleChoiceField(queryset=Music.objects.all(), required=False, widget=forms.CheckboxSelectMultiple)
+
+    class Meta:
+        model = Playlist
+        fields = ['name', 'music']
+
+class AddToPlaylistForm(forms.Form):
+    playlist_id = forms.ChoiceField(choices=[])
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        if user:
+            playlists = Playlist.objects.filter(user=user)
+            self.fields['playlist_id'].choices = [(playlist.id, playlist.name) for playlist in playlists]

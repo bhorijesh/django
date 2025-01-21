@@ -25,7 +25,7 @@
                         <div class="music-actions">
                             <a href="{% url 'delete' music.id %}" class="action-btn delete-btn">Delete</a>
                             <a href="{% url 'update' music.id %}" class="action-btn edit-btn">Edit</a>
-                            <a href="{% url 'playlist_list' music_id=music.id user_id=user.id %}" class="action-btn playlist-btn">To Playlist</a>
+                            <a href="{% url 'add_to_playlist' music.id user.id %}" class="action-btn playlist-btn">To Playlist</a>
                         </div>
 
                         <!-- Audio Player -->

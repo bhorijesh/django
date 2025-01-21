@@ -1,0 +1,78 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Add to Playlist{% endblock %}
+
+{% block content %}
+    <section class="add-to-playlist-section">
+        <h2 class="section-title">Select Playlist</h2>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="playlist-options">
+                {% for playlist in playlists %}
+                    <div class="playlist-option">
+                        <input type="radio" id="playlist_{{ playlist.id }}" name="playlist_id" value="{{ playlist.id }}" required>
+                        <label for="playlist_{{ playlist.id }}">{{ playlist.name }}</label>
+                    </div>
+                {% empty %}
+                    <p>You don't have any playlists. Create one first!</p>
+                {% endfor %}
+            </div>
+
+            <button type="submit" class="action-btn add-btn">Add to Playlist</button>
+        </form>
+
+        <a href="{% url 'index' %}" class="action-btn cancel-btn">Cancel</a>
+    </section>
+
+    <style>
+        .add-to-playlist-section {
+            padding: 30px;
+            background-color: #f0f0f0;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .playlist-options {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .playlist-option {
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .add-btn, .cancel-btn {
+            display: block;
+            width: 200px;
+            padding: 10px;
+            text-align: center;
+            margin: 20px auto;
+            background-color: #2196f3;
+            color: white;
+            font-size: 1.2em;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .add-btn:hover, .cancel-btn:hover {
+            background-color: #1976d2;
+        }
+
+        .cancel-btn {
+            background-color: #f44336;
+        }
+
+        .cancel-btn:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+{% endblock %}

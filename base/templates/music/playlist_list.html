@@ -76,6 +76,9 @@
     <div class="block_content">
         <h1>Your Playlists</h1>
 
+        <!-- Button to create a new playlist -->
+        <a href="{% url 'playlist-create' %}" class="create-playlist-btn">Create a Playlist</a>
+
         {% if playlists %}
             {% for playlist in playlists %}
                 <div class="playlist">
