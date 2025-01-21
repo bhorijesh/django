@@ -30,13 +30,29 @@
 
                     <!-- Audio Player -->
                     {% if music.audio %}
-                        <audio controls class="audio-player">
-                            <source src="{{ music.audio.url }}" type="audio/mpeg">
-                            Your browser does not support the audio element.
-                        </audio>
-                    {% else %}
-                        <p class="no-audio">No audio available</p>
-                    {% endif %}
+                    <audio controls class="audio-player" onplay="pauseOtherAudio(this)">
+                        <source src="{{ music.audio.url }}" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                {% else %}
+                    <p class="no-audio">No audio available</p>
+                {% endif %}
+                
+                <script>
+                    function pauseOtherAudio(currentAudio) {
+                        // Get all audio elements on the page
+                        const allAudio = document.querySelectorAll('audio');
+                        
+                        // Loop through all audio elements
+                        allAudio.forEach(audio => {
+                            // If it's not the one that is currently playing, pause it
+                            if (audio !== currentAudio) {
+                                audio.pause();
+                            }
+                        });
+                    }
+                </script>
+                
                 </li>
             {% empty %}
                 <p class="no-music">No music records available.</p>
