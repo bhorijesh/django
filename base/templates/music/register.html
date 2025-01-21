@@ -1,126 +1,59 @@
-<form method="post">
+{% block content %}
+  <h2>Register</h2>
+  
+  <form method="post">
     {% csrf_token %}
-    <style>
-      /* Reset default browser styles */
-      * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-      }
+    
+    <!-- Form fields -->
+    {{ form.as_p }}  <!-- Render the form fields -->
 
-      /* Body styling */
-      body {
-          font-family: Arial, sans-serif;
-          background-color: #f4f4f4;
-          color: #333;
-          line-height: 1.6;
-          padding: 20px;
-      }
+    <!-- Submit button -->
+    <button type="submit">Register</button>
+  </form>
 
-      /* Heading styling */
-      h1 {
-          text-align: center;
-          font-size: 2.5rem;
-          color: #2c3e50;
-          margin-bottom: 30px;
-      }
-
-      /* Form styling */
-      form {
-          background-color: white;
-          padding: 20px;
-          max-width: 600px;
-          margin: 0 auto;
-          border-radius: 8px;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      }
-
-      form button {
-          display: block;
-          width: 100%;
-          padding: 10px;
-          background-color: #3498db;
-          color: white;
-          font-size: 1.2rem;
-          border: none;
-          border-radius: 5px;
-          cursor: pointer;
-          transition: background-color 0.3s ease;
-          margin-top: 20px;
-      }
-
-      form button:hover {
-          background-color: #2980b9;
-      }
-
-      /* Link styling */
-      a {
-          display: inline-block;
-          text-align: center;
-          margin-top: 20px;
-          font-size: 1.1rem;
-          color: #3498db;
-          font-weight: bold;
-          text-decoration: none;
-          padding: 8px;
-          border-radius: 5px;
-          background-color: #ecf0f1;
-          transition: background-color 0.3s ease;
-      }
-
-      a:hover {
-          background-color: #3498db;
-          color: white;
-      }
-
-      /* Form fields styling */
-      form input, form select, form textarea {
-          width: 100%;
-          padding: 10px;
-          margin-bottom: 15px;
-          border: 1px solid #ccc;
-          border-radius: 5px;
-          font-size: 1rem;
-      }
-
-      form input:focus, form select:focus, form textarea:focus {
-          border-color: #3498db;
-          outline: none;
-      }
-
-      /* Margin and spacing for form fields */
-      form p {
-          margin-bottom: 20px;
-      }
-    </style>
-    <h1>Register</h1>
-    <form method="post">
-        {% csrf_token %}
-        {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-
-        <p>
-            <label for="id_first_name">First Name</label>
-            <input type="text" name="first_name" id="id_first_name" required>
-        </p>
-        <p>
-            <label for="id_last_name">Last Name</label>
-            <input type="text" name="last_name" id="id_last_name" required>
-        </p>
-        <p>
-            <label for="id_username">Username</label>
-            <input type="text" name="username" id="id_username" required>
-        </p>
-        <p>
-            <label for="id_password">Password</label>
-            <input type="password" name="password" id="id_password" required>
-        </p>
-        <button type="submit" class="btn btn-primary">Register</button>
-    </form>
-    <a href="{% url 'login' %}">Already have an account? Login here</a>
-</form>
+  <!-- Display messages -->
+  {% if messages %}
+    <ul>
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  
+  <!-- Internal Styling -->
+  <style>
+    /* Optional internal styling to enhance layout and design */
+    form {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    ul {
+      color: red;
+      list-style-type: none;
+      padding: 0;
+    }
+    li {
+      margin: 5px 0;
+    }
+  </style>
+{% endblock %}

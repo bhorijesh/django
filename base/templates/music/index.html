@@ -1,263 +1,263 @@
-{% extends 'base/base.html' %}
+    {% extends 'base/base.html' %}
 
-{% block title %}Music List{% endblock %}
+    {% block title %}Music List{% endblock %}
 
-{% block content %}
-    <section class="music-section">
-        <h2 class="section-title">Music Collection</h2>
-        <ul class="music-list">
-            {% for music in music_list %}
-                <li class="music-item">
-                    <!-- Artist Image -->
-                    {% if music.artist.image %}
-                        <img src="{{ music.artist.image.url }}" alt="{{ music.artist.name }}" class="artist-image">
-                    {% else %}
-                        <span class="no-image">No image</span>
-                    {% endif %}
+    {% block content %}
+        <section class="music-section">
+            <h2 class="section-title">Music Collection</h2>
+            <ul class="music-list">
+                {% for music in music_list %}
+                    <li class="music-item">
+                        <!-- Artist Image -->
+                        {% if music.artist.image %}
+                            <img src="{{ music.artist.image.url }}" alt="{{ music.artist.name }}" class="artist-image">
+                        {% else %}
+                            <span class="no-image">No image</span>
+                        {% endif %}
 
-                    <!-- Music Details -->
-                    <div class="music-details">
-                        <a href="{% url 'music-detail' music.id %}" class="music-title">{{ music.title }}</a>
-                        <a href="{% url 'artist-detail' music.artist.id %}" class="artist-name">{{ music.artist.name }}</a>
-                    </div>
-                    
-                    <!-- Music Actions -->
-                    <div class="music-actions">
-                        <a href="{% url 'delete' music.id %}" class="action-btn delete-btn">Delete</a>
-                        <a href="{% url 'update' music.id %}" class="action-btn edit-btn">Edit</a>
-                        <a href="{% url 'playlist_list' music_id=music.id user_id=user.id %}" class="action-btn playlist-btn">To Playlist</a>
-                    </div>
-
-                    <!-- Audio Player -->
-                    {% if music.audio %}
-                    <audio controls class="audio-player" onplay="pauseOtherAudio(this)">
-                        <source src="{{ music.audio.url }}" type="audio/mpeg">
-                        Your browser does not support the audio element.
-                    </audio>
-                {% else %}
-                    <p class="no-audio">No audio available</p>
-                {% endif %}
-                
-                <script>
-                    function pauseOtherAudio(currentAudio) {
-                        // Get all audio elements on the page
-                        const allAudio = document.querySelectorAll('audio');
+                        <!-- Music Details -->
+                        <div class="music-details">
+                            <a href="{% url 'music-detail' music.id %}" class="music-title">{{ music.title }}</a>
+                            <a href="{% url 'artist-detail' music.artist.id %}" class="artist-name">{{ music.artist.name }}</a>
+                        </div>
                         
-                        // Loop through all audio elements
-                        allAudio.forEach(audio => {
-                            // If it's not the one that is currently playing, pause it
-                            if (audio !== currentAudio) {
-                                audio.pause();
-                            }
-                        });
-                    }
-                </script>
-                
-                </li>
-            {% empty %}
-                <p class="no-music">No music records available.</p>
-            {% endfor %}
-        </ul>
-        <div class="pagination">
-            {% if music_list.has_previous %}
-                <a href="?page={{ music_list.previous_page_number }}" class="pagination-btn">Previous</a>
-            {% endif %}
+                        <!-- Music Actions -->
+                        <div class="music-actions">
+                            <a href="{% url 'delete' music.id %}" class="action-btn delete-btn">Delete</a>
+                            <a href="{% url 'update' music.id %}" class="action-btn edit-btn">Edit</a>
+                            <a href="{% url 'playlist_list' music_id=music.id user_id=user.id %}" class="action-btn playlist-btn">To Playlist</a>
+                        </div>
 
-            <span class="current-page">Page {{ music_list.number }} of {{ music_list.paginator.num_pages }}</span>
+                        <!-- Audio Player -->
+                        {% if music.audio %}
+                        <audio controls class="audio-player" onplay="pauseOtherAudio(this)">
+                            <source src="{{ music.audio.url }}" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    {% else %}
+                        <p class="no-audio">No audio available</p>
+                    {% endif %}
+                    
+                    <script>
+                        function pauseOtherAudio(currentAudio) {
+                            // Get all audio elements on the page
+                            const allAudio = document.querySelectorAll('audio');
+                            
+                            // Loop through all audio elements
+                            allAudio.forEach(audio => {
+                                // If it's not the one that is currently playing, pause it
+                                if (audio !== currentAudio) {
+                                    audio.pause();
+                                }
+                            });
+                        }
+                    </script>
+                    
+                    </li>
+                {% empty %}
+                    <p class="no-music">No music records available.</p>
+                {% endfor %}
+            </ul>
+            <div class="pagination">
+                {% if has_previous %}
+                    <a href="{% url 'index' %}?page={{ music_list.previous_page_number }}" class="pagination-btn">Previous</a>
+                {% endif %}
+            
+                <span class="current-page">Page {{ current_page }} of {{ total_pages }}</span>
+            
+                {% if has_next %}
+                    <a href="{% url 'index' %}?page={{ music_list.next_page_number }}" class="pagination-btn">Next &raquo;</a>
+                {% endif %}
+            </div>
+        </section>
 
-            {% if music_list.has_next %}
-                <a href="?page={{ music_list.next_page_number }}" class="pagination-btn">Next &raquo;</a>
-            {% endif %}
-        </div>
-    </section>
+        <footer class="footer">
+            <p>&copy; 2025 Music Collection</p>
+        </footer>
 
-    <footer class="footer">
-        <p>&copy; 2025 Music Collection</p>
-    </footer>
+        <style>
+            /* Pagination Styling */
+            .pagination {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-top: 30px;
+            }
 
-    <style>
-        /* Pagination Styling */
-        .pagination {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 30px;
-        }
+            .pagination-btn {
+                padding: 10px 20px;
+                margin: 0 5px;
+                background-color: #007bff;
+                color: white;
+                text-decoration: none;
+                border-radius: 5px;
+                font-size: 16px;
+                font-weight: bold;
+                transition: background-color 0.3s ease, transform 0.3s ease;
+            }
 
-        .pagination-btn {
-            padding: 10px 20px;
-            margin: 0 5px;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 16px;
-            font-weight: bold;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
+            .pagination-btn:hover {
+                background-color: #0056b3;
+                transform: translateY(-2px);
+            }
 
-        .pagination-btn:hover {
-            background-color: #0056b3;
-            transform: translateY(-2px);
-        }
+            .pagination-btn:active {
+                background-color: #004085;
+                transform: translateY(2px);
+            }
 
-        .pagination-btn:active {
-            background-color: #004085;
-            transform: translateY(2px);
-        }
+            .current-page {
+                font-size: 16px;
+                font-weight: bold;
+                margin: 0 10px;
+                color: #333;
+            }
+            /* General Section */
+            .music-section {
+                padding: 30px;
+                background-color: #f0f0f0;
+            }
 
-        .current-page {
-            font-size: 16px;
-            font-weight: bold;
-            margin: 0 10px;
-            color: #333;
-        }
-        /* General Section */
-        .music-section {
-            padding: 30px;
-            background-color: #f0f0f0;
-        }
+            .section-title {
+                font-size: 2.5rem;
+                color: #333;
+                text-align: center;
+                margin-bottom: 30px;
+                font-family: 'Arial', sans-serif;
+            }
 
-        .section-title {
-            font-size: 2.5rem;
-            color: #333;
-            text-align: center;
-            margin-bottom: 30px;
-            font-family: 'Arial', sans-serif;
-        }
+            .music-list {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 20px;
+                list-style-type: none;
+                padding: 0;
+                margin: 0;
+            }
 
-        .music-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-        }
+            .music-item {
+                background-color: #fff;
+                border-radius: 12px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+                padding: 20px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                transition: all 0.3s ease;
+                font-family: 'Roboto', sans-serif;
+            }
 
-        .music-item {
-            background-color: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: all 0.3s ease;
-            font-family: 'Roboto', sans-serif;
-        }
+            .music-item:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            }
 
-        .music-item:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-        }
+            /* Artist image styling */
+            .artist-image {
+                width: 80px;
+                height: 80px;
+                border-radius: 50%;
+                object-fit: cover;
+                margin-bottom: 20px;
+                transition: transform 0.3s ease;
+            }
 
-        /* Artist image styling */
-        .artist-image {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 20px;
-            transition: transform 0.3s ease;
-        }
+            .artist-image:hover {
+                transform: scale(1.1);
+            }
 
-        .artist-image:hover {
-            transform: scale(1.1);
-        }
+            /* No image fallback text */
+            .no-image {
+                color: #888;
+                font-size: 14px;
+                margin-bottom: 20px;
+            }
 
-        /* No image fallback text */
-        .no-image {
-            color: #888;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
+            .music-details {
+                text-align: center;
+                margin-bottom: 15px;
+            }
 
-        .music-details {
-            text-align: center;
-            margin-bottom: 15px;
-        }
+            .music-title, .artist-name {
+                font-size: 18px;
+                font-weight: bold;
+                text-decoration: none;
+                color: #333;
+                display: block;
+                margin-bottom: 5px;
+                transition: color 0.3s ease;
+            }
 
-        .music-title, .artist-name {
-            font-size: 18px;
-            font-weight: bold;
-            text-decoration: none;
-            color: #333;
-            display: block;
-            margin-bottom: 5px;
-            transition: color 0.3s ease;
-        }
+            .music-title:hover, .artist-name:hover {
+                color: #1e90ff;
+            }
 
-        .music-title:hover, .artist-name:hover {
-            color: #1e90ff;
-        }
+            /* Action buttons */
+            .music-actions {
+                display: flex;
+                gap: 10px;
+                margin-bottom: 10px;
+            }
 
-        /* Action buttons */
-        .music-actions {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
+            .action-btn {
+                padding: 8px 15px;
+                border-radius: 5px;
+                text-decoration: none;
+                font-size: 14px;
+                font-weight: 600;
+                color: white;
+                transition: background-color 0.3s ease;
+                display: inline-block;
+            }
 
-        .action-btn {
-            padding: 8px 15px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 600;
-            color: white;
-            transition: background-color 0.3s ease;
-            display: inline-block;
-        }
+            .delete-btn {
+                background-color: #f44336;
+            }
 
-        .delete-btn {
-            background-color: #f44336;
-        }
+            .delete-btn:hover {
+                background-color: #d32f2f;
+            }
 
-        .delete-btn:hover {
-            background-color: #d32f2f;
-        }
+            .edit-btn {
+                background-color: #4caf50;
+            }
 
-        .edit-btn {
-            background-color: #4caf50;
-        }
+            .edit-btn:hover {
+                background-color: #388e3c;
+            }
 
-        .edit-btn:hover {
-            background-color: #388e3c;
-        }
+            .playlist-btn {
+                background-color: #2196f3;
+            }
 
-        .playlist-btn {
-            background-color: #2196f3;
-        }
+            .playlist-btn:hover {
+                background-color: #1976d2;
+            }
 
-        .playlist-btn:hover {
-            background-color: #1976d2;
-        }
+            /* Audio player styling */
+            .audio-player {
+                width: 100%;
+                max-width: 320px;
+                margin-top: 10px;
+            }
 
-        /* Audio player styling */
-        .audio-player {
-            width: 100%;
-            max-width: 320px;
-            margin-top: 10px;
-        }
+            .no-audio {
+                font-size: 14px;
+                color: #777;
+                text-align: center;
+            }
 
-        .no-audio {
-            font-size: 14px;
-            color: #777;
-            text-align: center;
-        }
+            /* Footer */
+            .footer {
+                text-align: center;
+                padding: 15px 0;
+                background-color: #333;
+                color: white;
+                font-size: 14px;
+            }
 
-        /* Footer */
-        .footer {
-            text-align: center;
-            padding: 15px 0;
-            background-color: #333;
-            color: white;
-            font-size: 14px;
-        }
-
-        .footer p {
-            margin: 0;
-        }
-    </style>
-{% endblock %}
+            .footer p {
+                margin: 0;
+            }
+        </style>
+    {% endblock %}

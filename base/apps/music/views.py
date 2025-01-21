@@ -11,8 +11,14 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.views import View
+from django.views.generic import ListView, FormView, CreateView, TemplateView,UpdateView,DeleteView
+from django.contrib.auth.views import LoginView
 from django.contrib import messages
+from django.urls import reverse_lazy
 from django.core.paginator import Paginator
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 
 # Artist List View (for listing all artists and creating a new artist)
@@ -134,112 +140,104 @@ class MusicDetailView(APIView):
         music.delete()
         return Response({"detail": "Music deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
 
-@login_required
-def index(request):
-    music = Music.objects.all()  # Get all music records
-    paginator = Paginator(music, 6)  # Show 10 music items per page
+class index(LoginRequiredMixin, ListView):
+    model = Music
+    template_name = 'music/index.html'
+    context_object_name = 'music_list'
+    paginate_by = 6  # Show 6 items per page
 
-    page_number = request.GET.get('page')  # Get the page number from the request
-    music_list = paginator.get_page(page_number)  # Get the current page
 
-    return render(request, 'music/index.html', {'music_list': music_list})
+    def get_queryset(self):
+        return Music.objects.all() 
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        music = Music.objects.all()
+        paginator = Paginator(music, self.paginate_by)
+        page_number = self.request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        context['music_list'] = page_obj  # Pass paginated music list
+        context['total_records'] = paginator.count  # Total music records
+        context['total_pages'] = paginator.num_pages  # Total pages
+        context['current_page'] = page_obj.number  # Current page
+        context['has_previous'] = page_obj.has_previous()  # If previous page exists
+        context['has_next'] = page_obj.has_next()  # If next page exists
+        
+        return context
 
 # Artist Creation View (for creating an artist through a form)
-@login_required
-def artist_create(request):
-    if request.method == 'POST':
-        form = ArtistForm(request.POST,request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('artist-list')
-    else:
-        form = ArtistForm()
-    return render(request, 'music/artist_form.html', {'form': form})
+class artist_create(LoginRequiredMixin,CreateView):
+    model = Artist
+    template_name = 'music/artist_form.html'
+    form_class = ArtistForm
+    success_url = reverse_lazy('artist-list')
 
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
 
-# Music Creation View (for creating a music record through a form)
-@login_required
-def music_create(request):
-    if request.method == 'POST':
-        form = MusicForm(request.POST,request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('music-list')
-    else:
-        form = MusicForm()
-    return render(request, 'music/music_form.html', {'form': form}) 
+class music_create(LoginRequiredMixin,CreateView):
+    model = Music
+    template_name = 'music/music_form.html'
+    form_class = MusicForm
+    success_url = reverse_lazy('music-list')
 
-def delete(request, music_id):
-    music = Music.objects.get(id=music_id)
-    music.delete()
-    return redirect('index')   
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
 
-def play_delete(request,playlist_id):
-    playlist = Playlist.objects.get(id=playlist_id)
-    playlist.delete() 
-    return redirect('index')   
+class delete(DeleteView):
+    model = Music
+    success_url = reverse_lazy('index')
 
+    def get(self, request, *args, **kwargs):
+        # Use the get_object() method to fetch the object to delete
+        music = self.get_object()  
+        music.delete()  # Perform the deletion
+        return redirect(self.success_url)    
 
-def update(request, music_id):
-    music = Music.objects.get(id=music_id)
-    if request.method == 'POST':
-        form = MusicForm(request.POST, instance=music)
-        if form.is_valid():
-            form.save()
-            return redirect('index')  
-    else:
-        form = MusicForm(instance=music)
+class play_delete(DeleteView):
+    model =Playlist
+    success_url = reverse_lazy('index')
+    # Override to prevent rendering of a template
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()  # Get the Music object
+        self.object.delete()  # Delete the object
+        return self.get_success_url()     
 
-    return render(request, 'music/update.html', {'form': form, 'music': music})
+class update(UpdateView):
+    model = Music
+    form_class = MusicForm  # Fixed the typo here
+    template_name = 'music/update.html'
+    context_object_name = 'music'
+    success_url = reverse_lazy('index')  # Use reverse_lazy for success_url
 
-def login_user(request):
-    if request.method == 'POST':
-        form = AuthenticationForm(data=request.POST)
-        if form.is_valid():
-            username = form.cleaned_data.get('username')  
-            password = form.cleaned_data.get('password')  
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-                # Log the user in
-                login(request, user)
-                return redirect('index')  
-            else:
-                form.add_error(None, 'Invalid username or password')
-        else:
-            form.add_error(None, 'Form is invalid')
-
-    else:
-        form = AuthenticationForm()
-
-    return render(request, 'music/form.html', {'form': form})   
+class login_user(LoginView):
+    template_name = 'music/form.html'
+    def form_invalid(self, form):
+        # Optionally add a custom error message
+        messages.error(self.request, "Invalid username or password")
+        return super().form_invalid(form)
 
 def logout_page(request):
     logout(request)
     return redirect('login')
 
+class register(FormView):
+    template_name = 'music/register.html'
+    form_class = RegisterForm
+    success_url = reverse_lazy('login')  # Redirect to the login page after successful registration
 
-def register(request):
-    if request.method == "POST":
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        
-        user = User.objects.filter(username=username)
-        if user.exists():
-            messages.info(request , 'Username already taken')
-            return redirect('register')
-        
-        user = User.objects.create(
-            first_name=first_name,
-            last_name=last_name,
-            username=username,
-        )
-        user.set_password(password)
-        user.save()
-        messages.info(request, 'Account successfully created')
-        return redirect('login')
-    return render(request, 'music/register.html')
+    def form_valid(self, form):
+        form.save()  # Save the new user
+        messages.success(self.request, 'Account successfully created')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'There was an error with your registration')
+        return super().form_invalid(form)
 
 
 def search(request):
@@ -270,14 +268,11 @@ class PlaylistView(APIView):
             playlists = Playlist.objects.filter(user=request.user)
             serializer = PlaylistSerializer(playlists, many=True)
             return Response(serializer.data)
+class playlist(ListView):
+    model = Playlist
+    template_name = 'musicl/playlist_list.html'
+    context_object_name ='playlist'
 
-def playlist(request, music_id, user_id):
-    music = Music.objects.get(id=music_id)  # The music being viewed or modified
-    user = get_object_or_404(User, id=user_id)  # The user who owns the playlist
-
-    # Check if a playlist for the user already exists, or create one
-    playlist, created = Playlist.objects.get_or_create(user=user, name="My Playlist")
-    playlist.music.add(music)
+    def get_queryset(self):
+        return Playlist.objects.filter(user=self.request.user)
     
-    # Redirect to the PlaylistView after adding the music
-    return redirect('playlist-list')
