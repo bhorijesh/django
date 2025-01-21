@@ -12,6 +12,8 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.core.paginator import Paginator
+
 
 # Artist List View (for listing all artists and creating a new artist)
 class ArtistListView(APIView):
@@ -77,7 +79,11 @@ class MusicListView(APIView):
         # Force the rendering of HTML for browsers (regardless of Accept header)
         if 'text/html' in request.META.get('HTTP_ACCEPT', '') or 'application/xhtml+xml' in request.META.get('HTTP_ACCEPT', ''):
             music = Music.objects.all()
-            return render(request, 'music/music_list.html', {'music_list': music})  # HTML response for browser
+            paginator = Paginator(music, 6)  
+            page_number = request.GET.get('page')
+            page_obj = paginator.get_page(page_number)
+            
+            return render(request, 'music/music_list.html', {'music_list': page_obj})
         else:
             music = Music.objects.all()
             serializer = MusicSerializer(music, many=True)
@@ -130,8 +136,13 @@ class MusicDetailView(APIView):
 
 @login_required
 def index(request):
-    music = Music.objects.all()
-    return render(request, 'music/index.html', {'music_list': music})
+    music = Music.objects.all()  # Get all music records
+    paginator = Paginator(music, 6)  # Show 10 music items per page
+
+    page_number = request.GET.get('page')  # Get the page number from the request
+    music_list = paginator.get_page(page_number)  # Get the current page
+
+    return render(request, 'music/index.html', {'music_list': music_list})
 
 # Artist Creation View (for creating an artist through a form)
 @login_required

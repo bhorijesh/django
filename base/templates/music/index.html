@@ -42,6 +42,17 @@
                 <p class="no-music">No music records available.</p>
             {% endfor %}
         </ul>
+        <div class="pagination">
+            {% if music_list.has_previous %}
+                <a href="?page={{ music_list.previous_page_number }}" class="pagination-btn">Previous</a>
+            {% endif %}
+
+            <span class="current-page">Page {{ music_list.number }} of {{ music_list.paginator.num_pages }}</span>
+
+            {% if music_list.has_next %}
+                <a href="?page={{ music_list.next_page_number }}" class="pagination-btn">Next &raquo;</a>
+            {% endif %}
+        </div>
     </section>
 
     <footer class="footer">
@@ -49,6 +60,42 @@
     </footer>
 
     <style>
+        /* Pagination Styling */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 30px;
+        }
+
+        .pagination-btn {
+            padding: 10px 20px;
+            margin: 0 5px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .pagination-btn:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .pagination-btn:active {
+            background-color: #004085;
+            transform: translateY(2px);
+        }
+
+        .current-page {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 0 10px;
+            color: #333;
+        }
         /* General Section */
         .music-section {
             padding: 30px;

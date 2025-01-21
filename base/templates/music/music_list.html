@@ -33,6 +33,21 @@
         {% endfor %}
     </ul>
 
+    <div class="pagination">
+        <div class="pagination-links">
+            {% if music_list.has_previous %}
+                <a href="?page={{ music_list.previous_page_number }}">Previous</a>
+            {% endif %}
+
+            <span>Page {{ music_list.number }} of {{ music_list.paginator.num_pages }}</span>
+
+            {% if music_list.has_next %}
+                <a href="?page={{ music_list.next_page_number }}">Next &raquo;</a>
+
+            {% endif %}
+        </div>
+    </div>
+
     <div class="add-new-music">
         <a href="{% url 'music-create' %}" class="add-new-btn">Add New Music</a>
     </div>
@@ -139,6 +154,31 @@
             color: #777;
         }
 
+        /* Pagination Styling */
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .pagination-links a {
+            padding: 8px 12px;
+            margin: 0 5px;
+            text-decoration: none;
+            background-color: #4caf50;
+            color: white;
+            border-radius: 5px;
+        }
+
+        .pagination-links a:hover {
+            background-color: #388e3c;
+        }
+
+        .pagination-links span {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 0 10px;
+        }
+
         /* Add new music button */
         .add-new-music {
             text-align: center;
@@ -176,4 +216,3 @@
         }
     </style>
 {% endblock %}
-
