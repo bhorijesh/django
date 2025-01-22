@@ -1,10 +1,111 @@
 {% extends "base/base.html" %}
 
 {% block content %}
-  <h1>Create a New Playlist</h1>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Create Playlist</button>
-  </form>
+  <style>
+    /* General Container Styling */
+    .form-container {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 40px;
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0px 6px 30px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      font-family: 'Arial', sans-serif;
+    }
+
+    /* Heading Styling */
+    .form-container h1 {
+      font-size: 2.2em; /* Adjusted for a more balanced size */
+      color: #2C3E50; /* A deep, professional color */
+      margin-bottom: 25px; /* Reduced bottom margin for cleaner spacing */
+      font-weight: 600; /* A bit lighter weight for a more refined look */
+      text-transform: capitalize; /* Capitalized only the first letter of each word */
+      letter-spacing: 0.5px; /* Added slight letter-spacing for a cleaner look */
+      line-height: 1.3; /* Increased line-height for better readability */
+    }
+
+    /* Form Layout */
+    .playlist-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    /* Input, Select, Textarea Styling */
+    .playlist-form input,
+    .playlist-form select,
+    .playlist-form textarea {
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 1.2em;
+      color: #34495E;
+      background-color: #fafafa;
+      transition: all 0.3s ease;
+      margin-bottom: 10px;
+    }
+
+    /* Focus Effect */
+    .playlist-form input:focus,
+    .playlist-form select:focus,
+    .playlist-form textarea:focus {
+      outline: none;
+      border-color: #4A90E2;
+      background-color: #fff;
+    }
+
+    /* Button Styling */
+    .submit-btn {
+      padding: 16px 30px;
+      background-color: #4A90E2;
+      color: #fff;
+      font-size: 1.4em;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      font-weight: 600;
+      margin-top: 20px;
+    }
+
+    /* Button Hover Effect */
+    .submit-btn:hover {
+      background-color: #357ABD;
+      transform: translateY(-3px);
+    }
+
+    /* Placeholder Text Styling */
+    ::placeholder {
+      color: #aaa;
+      font-size: 1.1em;
+    }
+
+    /* Styling for error messages */
+    .form-container .error {
+      color: #E74C3C;
+      font-size: 1.1em;
+      margin-top: 10px;
+      text-align: left;
+    }
+
+    /* Label Styling */
+    .playlist-form label {
+      font-size: 1.2em;
+      color: #34495E;
+      text-align: left;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+  </style>
+
+  <div class="form-container">
+    <h1>Create a New Playlist</h1>
+    <form method="post" class="playlist-form">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="submit-btn">Create Playlist</button>
+    </form>
+  </div>
 {% endblock %}

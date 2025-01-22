@@ -1,132 +1,223 @@
 {% extends 'base/base.html' %}
 
-{% block content %}
-    <div class="container mt-5">
-        <h1 class="text-center mb-4">Search Results</h1>
-
-        <div class="row justify-content-center mb-4">
-            <div class="col-md-6">
-                <form method="GET" action="{% url 'search' %}" class="d-flex">
-                    <input type="text" name="q" value="{{ query }}" class="form-control me-2" placeholder="Search for music or artists">
-                    <button type="submit" class="btn btn-primary">Search</button>
-                </form>
-            </div>
-        </div>
-
-        {% if query %}
-            <h3 class="mb-4">Results for "{{ query }}"</h3>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <h4>Music:</h4>
-                    <ul class="list-group">
-                        {% for music in music_results %}
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                {{ music.title }} by {{ music.artist.name }}
-                            </li>
-                        {% empty %}
-                            <li class="list-group-item">No music found.</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-
-                <div class="col-md-6">
-                    <h4>Artists:</h4>
-                    <ul class="list-group">
-                        {% for artist in artist_results %}
-                            <li class="list-group-item">{{ artist.name }}</li>
-                        {% empty %}
-                            <li class="list-group-item">No artists found.</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-        {% else %}
-            <p class="text-center mt-4">Enter a search query to get started.</p>
-        {% endif %}
-    </div>
-{% endblock %}
-{% block extra_css %}
+    <title>Search Results</title>
+    {% block content %}
     <style>
-        /* General Body Styles */
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Body */
         body {
-            background-color: #f8f9fa; /* Light background color */
-            font-family: 'Arial', sans-serif; /* Clean font */
+            background-color: #f4f7fc;
+            color: #333;
+            line-height: 1.6;
         }
 
-        /* Header Styles */
-        h1, h3 {
-            color: #333; /* Dark text color for header */
-            font-weight: bold;
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
         }
 
-        h4 {
-            color: #007bff; /* Blue color for sub-headers */
-            font-weight: 500;
-        }
-
-        /* Input & Button Styling */
-        .form-control {
-            padding: 1rem;
-            font-size: 1.1rem;
-        }
-
-        .btn-primary {
-            background-color: #007bff;
-            border-color: #007bff;
-            padding: 0.8rem 1.5rem;
-            font-size: 1.1rem;
-        }
-
-        .btn-primary:hover {
-            background-color: #0056b3;
-            border-color: #0056b3;
-        }
-
-        /* List Group Styling */
-        .list-group-item {
-            font-size: 1.1rem;
-            padding: 1rem;
-            border-radius: 5px;
-        }
-
-        .list-group-item:hover {
-            background-color: #e9ecef;
-        }
-
-        .list-group-item d-flex {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        /* Centering text */
-        .text-center {
+        /* Header */
+        h1 {
+            font-size: 2.5rem;
+            color: #333;
             text-align: center;
+            margin-bottom: 30px;
         }
 
-        /* Spacing */
-        .mt-5 {
-            margin-top: 3rem;
+        /* Query results heading */
+        h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #555;
+            text-align: center;
+        } 
+
+        /* Music Results */
+        .music-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
         }
 
-        .mb-4 {
-            margin-bottom: 1.5rem;
+        /* Music Item */
+        .music-item {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .me-2 {
-            margin-right: 0.5rem;
+        .music-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Artist Image in Music */
+        .artist-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        /* Music Title & Artist */
+        .music-item p {
+            font-size: 1.1rem;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        /* No Image Text */
+        .no-image {
+            color: #bbb;
+            font-size: 0.9rem;
+        }
+
+        /* Audio Player */
+        .audio-player {
+            width: 100%;
+            margin-top: 15px;
+            background-color: #f4f7fc;
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        /* Artist Results */
+        .artist-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        /* Artist Item */
+        .artist-item {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .artist-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .artist-item p {
+            font-size: 1.2rem;
+            color: #333;
+            margin-top: 10px;
+        }
+
+        /* Artist Image */
+        .artist-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-bottom: 15px;
+        }
+
+        /* No Audio Message */
+        .no-audio {
+            color: #d9534f;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        /* Empty State Message */
+        p.no-results {
+            color: #777;
+            font-size: 1rem;
+            text-align: center;
+            margin-top: 20px;
         }
 
         /* Responsive Design */
-        .container {
-            max-width: 960px;
-        }
+        @media (max-width: 768px) {
+            .music-results,
+            .artist-results {
+                grid-template-columns: 1fr;
+            }
 
-        /* Footer or Bottom Message Styling */
-        p {
-            font-size: 1.1rem;
+            .music-item,
+            .artist-item {
+                margin-bottom: 20px;
+            }
         }
-
     </style>
+
+    <div class="container">
+        <h1>Search Results</h1>
+
+        {% if query %}
+            <h3>Results for "{{ query }}"</h3>
+
+            <!-- Display music results -->
+            <div class="music-results">
+                {% for music in music_results %}
+                    <div class="music-item">
+                        <p>
+                            <!-- Artist Image in Music -->
+                            {% if music.artist.image %}
+                                <img src="{{ music.artist.image.url }}" alt="{{ music.artist.name }}" class="artist-image me-3">
+                            {% else %}
+                                <span class="no-image me-3">No image</span>
+                            {% endif %}
+                            {{ music.title }} by {{ music.artist.name }}
+                        </p>
+
+                        <!-- Audio Player -->
+                        {% if music.audio %}
+                            <audio controls class="audio-player" onplay="pauseOtherAudio(this)">
+                                <source src="{{ music.audio.url }}" type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
+                        {% else %}
+                            <p class="no-audio">No audio available</p>
+                        {% endif %}
+                    </div>
+                {% empty %}
+                    <p class="no-results">No music found.</p>
+                {% endfor %}
+            </div>
+
+            <!-- Display artist results -->
+            <div class="artist-results">
+                {% for artist in artist_results %}
+                    <div class="artist-item">
+                        <!-- Artist Image -->
+                        {% if artist.image %}
+                            <img src="{{ artist.image.url }}" alt="{{ artist.name }}" class="artist-image">
+                        {% else %}
+                            <span class="no-image">No image</span>
+                        {% endif %}
+                        <p>{{ artist.name }}</p>
+                    </div>
+                {% empty %}
+                    <p class="no-results">No artists found.</p>
+                {% endfor %}
+            </div>
+
+        {% else %}
+            <p class="no-results">No search query entered.</p>
+        {% endif %}
+    </div>
 {% endblock %}
