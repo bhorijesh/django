@@ -47,11 +47,10 @@ class PlaylistForm(forms.ModelForm):
         fields = ['name', 'music']
 
 class AddToPlaylistForm(forms.Form):
-    playlist_id = forms.ChoiceField(choices=[])
+    playlist_id = forms.ChoiceField(label="Select Playlist", choices=[])
 
     def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)
+        user = kwargs.get('user')  # Get the user passed from the view
         super().__init__(*args, **kwargs)
-        if user:
-            playlists = Playlist.objects.filter(user=user)
-            self.fields['playlist_id'].choices = [(playlist.id, playlist.name) for playlist in playlists]
+        # Dynamically populate the choices with the user's playlists
+        self.fields['playlist_id'].choices = [(playlist.id, playlist.name) for playlist in Playlist.objects.filter(user=user)]

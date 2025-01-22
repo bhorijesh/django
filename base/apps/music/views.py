@@ -268,6 +268,7 @@ class PlaylistView(APIView):
             playlists = Playlist.objects.filter(user=request.user)
             serializer = PlaylistSerializer(playlists, many=True)
             return Response(serializer.data)
+        
 # class playlist(ListView):
 #     model = Playlist
 #     template_name = 'musicl/playlist_list.html'
@@ -290,33 +291,41 @@ class PlaylistCreateView(CreateView):
         # Redirect to the playlist list page after successfully creating the playlist
         return reverse_lazy('playlist-list')
     
-class AddToPlaylistView(FormView):
+class AddToPlaylistView(LoginRequiredMixin, View):
     template_name = 'music/select_playlist.html'
-    form_class = AddToPlaylistForm
 
     def dispatch(self, request, *args, **kwargs):
-        # Get the music object from the URL and the user
+        # Get the music object from the URL and the logged-in user
         self.music = get_object_or_404(Music, id=self.kwargs['music_id'])
-        self.user = get_object_or_404(User, id=self.kwargs['user_id'])  # Ensure you have the User model
+        self.user = request.user
         return super().dispatch(request, *args, **kwargs)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['music'] = self.music
-        context['playlists'] = Playlist.objects.filter(user=self.user)
-        return context
+    def get(self, request, *args, **kwargs):
+        # Fetch all playlists of the logged-in user
+        playlists = Playlist.objects.filter(user=self.user)
+        
+        # Render the page with the playlists and the music item
+        return render(request, self.template_name, {
+            'music': self.music,
+            'playlists': playlists
+        })
 
-    def form_valid(self, form):
-        # Get the selected playlist ID from the form
-        playlist_id = form.cleaned_data['playlist_id']
+    def post(self, request, *args, **kwargs):
+        # Handle the form submission (adding music to a playlist)
+        playlist_id = request.POST.get('playlist_id')
+
+        # Ensure that the playlist_id is valid
+        if not playlist_id:
+            messages.error(request, "Please select a playlist to add the music.")
+            return redirect('add-to-playlist', music_id=self.music.id)
+
         playlist = get_object_or_404(Playlist, id=playlist_id)
 
-        # Add the music to the playlist
-        playlist.music.add(self.music)
+        # Add the music to the playlist only if it's not already in the playlist
+        if self.music not in playlist.music.all():
+            playlist.music.add(self.music)
+            messages.success(request, f"Added {self.music.title} to {playlist.name}.")
+        else:
+            messages.info(request, f"{self.music.title} is already in {playlist.name}.")
 
-        # Redirect to a success page or playlist page
-        return redirect('playlist_list')  # Update the redirect URL based on your needs
-
-    def form_invalid(self, form):
-        # Handle the case where the form is invalid
-        return self.render_to_response(self.get_context_data(form=form))
+        return redirect('playlist-list')  # Redirect to the playlist list page after adding music

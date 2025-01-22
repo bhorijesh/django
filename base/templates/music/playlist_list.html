@@ -6,37 +6,52 @@
         .block_content {
             font-family: 'Arial', sans-serif;
             background-color: #f9f9f9;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-            max-width: 1000px;
-            margin: 20px auto;
+            padding: 50px 40px;
+            border-radius: 12px;
+            box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.1);
+            max-width: 1200px;
+            margin: 40px auto;
             color: #333;
             box-sizing: border-box;
         }
 
         /* Title styling */
         .block_content h1 {
-            font-size: 2.5em;
-            color: #4A90E2;
+            font-size: 2.8em;
+            color: #2C3E50;
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 50px;
+            font-weight: bold;
         }
 
         /* Playlist container styling */
         .playlist {
             background-color: #fff;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .playlist:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.15);
         }
 
         /* Playlist title styling */
         .playlist h3 {
-            font-size: 1.8em;
-            color: #333;
-            margin-bottom: 15px;
+            font-size: 2.2em;
+            color: #34495E;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        /* Subtitle for music list */
+        .playlist h4 {
+            font-size: 1.5em;
+            color: #7F8C8D;
+            margin-bottom: 20px;
         }
 
         /* Music list styling */
@@ -47,28 +62,103 @@
         }
 
         .playlist ul li {
-            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            font-size: 1.2em;
             color: #555;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.2s ease;
         }
+
+        .playlist ul li:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Song info container */
+        .song-info {
+            display: flex;
+            flex-direction: column;  /* Stack the title and artist vertically */
+            margin-left: 20px;       /* Provide space between song info and artist image */
+            flex-grow: 1;
+            padding: 10px 0;         /* Padding for better spacing */
+        }
+        
+        /* Song title styling */
+        .song-title {
+            font-weight: bold;
+            color: #34495E;
+            font-size: 1.4em;         /* Larger font size for the title */
+            margin-bottom: 8px;       /* Add spacing below the title */
+            line-height: 1.4;         /* Line height for readability */
+        }
+        
+        /* Song artist styling */
+        .song-artist {
+            color: #7F8C8D;
+            font-size: 1.2em;         /* Slightly smaller size for artist name */
+            font-style: italic;
+            margin-top: 5px;          /* Space above the artist name */
+            line-height: 1.4;         /* Line height for readability */
+        }        
 
         /* Audio player styling */
         .playlist audio {
-            margin-top: 10px;
-            border-radius: 5px;
+            margin-top: 20px;
+            border-radius: 8px;
             width: 100%;
+            background-color: #F4F4F4;
+            padding: 10px 15px;
         }
 
         /* Message for no playlists */
         .no-playlists {
             text-align: center;
-            font-size: 1.2em;
-            color: #d9534f;
+            font-size: 1.4em;
+            color: #E74C3C;
+            font-weight: bold;
         }
 
         /* Styling for 'No audio available' message */
         .no-audio {
-            color: #d9534f;
+            color: #E74C3C;
+            font-style: italic;
+            font-size: 1.2em;
+        }
+
+        /* Button to create a new playlist */
+        .create-playlist-btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: #4A90E2;
+            color: #fff;
+            font-size: 1.3em;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 40px;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+
+        .create-playlist-btn:hover {
+            background-color: #357ABD;
+        }
+
+        /* Artist image styling */
+        .artist-image {
+            max-width: 160px;
+            height: auto;
+            border-radius: 8px;
+            display: block;
+            margin-top: 20px;
+        }
+
+        /* 'No image' message styling */
+        .no-image {
+            font-size: 1.2em;
+            color: #7F8C8D;
             font-style: italic;
         }
     </style>
@@ -87,19 +177,30 @@
                     <ul>
                         {% if playlist.music.all %}
                             {% for song in playlist.music.all %}
-                                <li>{{ song.title }} by {{ song.artist }}</li>
-                                
-                                <!-- Check if song.audio exists -->
-                                {% if song.audio %}
-                                    <br>
-                                    <audio controls>
-                                        <source src="{{ song.audio.url }}" type="audio/mpeg">
-                                        Your browser does not support the audio element.
-                                    </audio>
-                                {% else %}
-                                    <p class="no-audio">No audio available for {{ song.title }}</p>
-                                {% endif %}
-                                
+                                <li>
+                                    <!-- Song Title and Artist -->
+                                    <div class="song-info">
+                                        <span class="song-title">{{ song.title }}</span>
+                                        <span class="song-artist">by {{ song.artist }}</span>
+                                    </div>
+
+                                    <!-- Artist Image -->
+                                    {% if song.artist.image %}
+                                        <img src="{{ song.artist.image.url }}" alt="{{ song.artist.name }}" class="artist-image">
+                                    {% else %}
+                                        <span class="no-image">No image</span>
+                                    {% endif %}
+
+                                    <!-- Audio Player -->
+                                    {% if song.audio %}
+                                        <audio controls>
+                                            <source src="{{ song.audio.url }}" type="audio/mpeg">
+                                            Your browser does not support the audio element.
+                                        </audio>
+                                    {% else %}
+                                        <p class="no-audio">No audio available for {{ song.title }}</p>
+                                    {% endif %}
+                                </li>
                             {% endfor %}
                         {% else %}
                             <li>No music in this playlist yet.</li>

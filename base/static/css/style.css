@@ -1,4 +1,3 @@
-
 /* Custom styles */
 * {
     margin: 0;
@@ -9,30 +8,37 @@
 /* Body styling */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #e0f7fa;
-    color: #333;
-    line-height: 1.6;
+    background: #f9f9f9; /* Light background for a softer feel */
+    color: #000000; /* Black text for a professional look */
+    line-height: 0.6;
 }
 
 /* Header styling */
 header {
-    background: linear-gradient(to right, #2c3e50, #3498db);
+    background: linear-gradient(to right, #040404, #8c9fa6);
     color: white;
-    padding: 30px;
+    padding: 40px;
     text-align: center;
-    border-bottom: 5px solid #3498db;
+    border-bottom: 5px solid #8c9fa6;
 }
 
 header h1 {
-    font-size: 3rem;
-    margin-bottom: 10px;
+    font-size: 2.8rem;
+    margin-bottom: 15px;
+    font-weight: bold;
+    color: #ecf0f1; /* Lighter color for the header text */
+}
+
+/* Navbar styling */
+nav {
+    margin-top: 15px;
 }
 
 nav ul {
     list-style-type: none;
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 30px;
 }
 
 nav ul li {
@@ -41,15 +47,15 @@ nav ul li {
 
 nav ul li a {
     text-decoration: none;
-    color: white;
-    font-size: 1.2rem;
-    padding: 10px 20px;
-    border-radius: 8px;
+    color: rgb(12, 12, 12);
+    font-size: 1.1rem;
+    padding: 12px 25px;
+    border-radius: 50px; /* Rounded corners for a soft, modern look */
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 nav ul li a:hover {
-    background-color: #3498db;
+    background-color: #8c9fa6; /* Highlight color */
     transform: translateY(-2px);
 }
 
@@ -60,7 +66,7 @@ section {
     padding: 30px;
     background-color: white;
     border-radius: 12px;
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
 }
 
@@ -69,9 +75,9 @@ section:hover {
 }
 
 h2 {
-    font-size: 2.5rem;
+    font-size: 2.4rem;
     margin-bottom: 30px;
-    color: #2c3e50;
+    color: #000000; /* Black text for section headings */
     text-align: center;
     font-weight: bold;
 }
@@ -82,36 +88,36 @@ ul {
 }
 
 ul li {
-    background: #9b59b6;
-    border-radius: 10px;
-    margin-bottom: 25px;
+    background:  #ecf0f1; 
+    border-radius: 12px;
+    margin-bottom: 20px;
     padding: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 ul li:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
 }
 
 ul li a {
     text-decoration: none;
-    color: #fff;
+    color: #000000; /* Black color for links */
     font-weight: bold;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     display: block;
     margin-bottom: 10px;
     transition: color 0.3s ease;
 }
 
 ul li a:hover {
-    color: #3498db;
+    color: #3498db; /* Soft blue hover effect */
 }
 
 ul li p {
     font-size: 1rem;
-    color: #fff;
+    color: #000000; /* Black color for secondary text */
     margin-bottom: 10px;
 }
 
@@ -130,11 +136,12 @@ footer p {
     font-size: 1rem;
 }
 
+/* Button styling */
 .delete-btn {
     color: white;
-    background-color: red;
+    background-color: #e74c3c; /* Soft red background */
     border-radius: 4px;  
-    padding: 6px 12px;   
+    padding: 8px 16px;   
     font-size: 14px;     
     text-decoration: none;
     display: inline-block; 
@@ -145,9 +152,10 @@ footer p {
 }
 
 .delete-btn:hover {
-    background-color: darkred;  
+    background-color: #c0392b;  /* Darker red when hovered */
 }
-/* Ensure the navbar has relative positioning for the logout button positioning */
+
+/* Navbar adjustments */
 .navbar {
     position: relative;
 }
@@ -159,19 +167,20 @@ footer p {
     right: 10px; /* Position from the right */
     background-color: #f44336; /* Red background */
     color: white; /* White text */
-    padding: 5px 10px; /* Smaller padding for a compact button */
-    border-radius: 5px; /* Rounded corners */
+    padding: 8px 14px; /* Adequate padding for visibility */
+    border-radius: 8px; /* Rounded corners */
     text-decoration: none; /* Remove underline */
-    font-weight: bold; /* Bold text */
-    font-size: 12px; /* Smaller text */
-    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition effect */
+    font-weight: bold;
+    font-size: 14px; /* Slightly larger text */
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Hover effect for the logout button */
 .navbar-brand:hover {
-    background-color: #d32f2f; /* Darker red when hovered */
-    color: white; /* White text when hovered */
+    background-color: #d32f2f;
+    color: white;
 }
+
 /* General styling for the form container */
 .form.d-flex {
     display: flex;
@@ -179,7 +188,7 @@ footer p {
     justify-content: flex-start;
     margin-top: 10px;
     margin-bottom: 10px;
-    background-color: transparent; /* Ensuring no background color */
+    background-color: transparent;
     padding: 0;
     border-radius: 50px;
 }
@@ -191,19 +200,19 @@ footer p {
     padding: 8px 15px;
     font-size: 14px;
     transition: border-color 0.3s ease;
-    width: 300px; /* Set width for consistent design */
+    width: 300px;
 }
 
 .form-control:focus {
-    border-color: #28a745; /* Green border on focus */
-    box-shadow: 0 0 5px rgba(40, 167, 69, 0.5); /* Subtle shadow effect */
+    border-color: #3498db; /* Soft blue on focus */
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
 }
 
 /* Styling for the search button */
 .btn-outline-success {
     border-radius: 50px;
-    color: #28a745;
-    border: 1px solid #28a745;
+    color: #3498db;
+    border: 1px solid #3498db;
     padding: 8px 20px;
     font-size: 14px;
     transition: all 0.3s ease;
@@ -211,13 +220,13 @@ footer p {
 }
 
 .btn-outline-success:hover {
-    background-color: #28a745;
+    background-color: #3498db;
     color: white;
-    border-color: #28a745;
+    border-color: #3498db;
 }
 
 .btn-outline-success:focus {
-    box-shadow: 0 0 5px rgba(40, 167, 69, 0.5);
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
 }
 
 /* Add responsive behavior */
