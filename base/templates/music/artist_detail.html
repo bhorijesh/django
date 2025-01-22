@@ -3,14 +3,50 @@
 {% block title %}{{ artist.name }} Details{% endblock %}
 
 {% block content %}
+    {% if artist.image %}
+        <img src="{{ artist.image.url }}" alt="{{ artist.name }}">
+    {% else %}
+        <span>No image</span>
+    {% endif %}
+    
     <h1>{{ artist.name }}</h1>
     <p>Genre: {{ artist.genre }}</p>
-    <p>Albums: 
-        <ul>
-            {% for album in artist.albums.all %}
-                <li>{{ album.title }}</li>
+
+    <h2>Music:</h2>
+    <ul>
+        {% if artist.music.all %}
+            {% for song in artist.music.all %}
+                <li>
+                    <!-- Song Title and Artist -->
+                    <div class="song-info">
+                        <span class="song-title">{{ song.title }}</span>
+                        <span class="song-artist">by {{ song.artist.name }}</span>
+                    </div>
+
+                    <!-- Artist Image -->
+                    {% if song.artist.image %}
+                        <img src="{{ song.artist.image.url }}" alt="{{ song.artist.name }}" class="artist-image">
+                    {% else %}
+                        <span class="no-image">No image</span>
+                    {% endif %}
+
+                    <!-- Audio Player -->
+                    {% if song.audio %}
+                        <audio controls>
+                            <source src="{{ song.audio.url }}" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    {% else %}
+                        <p class="no-audio">No audio available for {{ song.title }}</p>
+                    {% endif %}
+                </li>
+            {% empty %}
+                <p class="no-music">No music available for this artist.</p>
             {% endfor %}
-        </ul>
-    </p>
+        {% else %}
+            <p class="no-music">No music records available for this artist.</p>
+        {% endif %}
+    </ul>
+
     <a href="{% url 'artist-list' %}">Back to Artist List</a>
 {% endblock %}
