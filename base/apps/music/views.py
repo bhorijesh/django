@@ -268,14 +268,6 @@ class PlaylistView(APIView):
             playlists = Playlist.objects.filter(user=request.user)
             serializer = PlaylistSerializer(playlists, many=True)
             return Response(serializer.data)
-        
-# class playlist(ListView):
-#     model = Playlist
-#     template_name = 'musicl/playlist_list.html'
-#     context_object_name ='playlist'
-
-#     def get_queryset(self):
-#         return Playlist.objects.filter(user=self.request.user)
 
 class PlaylistCreateView(CreateView):
     model = Playlist

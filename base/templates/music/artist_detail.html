@@ -1,52 +1,127 @@
 {% extends 'base/base.html' %}
 
-{% block title %}{{ artist.name }} Details{% endblock %}
-
 {% block content %}
+  <div class="artist-details">
+    <h1>{{ artist.name }}</h1>
+    
     {% if artist.image %}
+      <div class="artist-image">
         <img src="{{ artist.image.url }}" alt="{{ artist.name }}">
-    {% else %}
-        <span>No image</span>
+      </div>
     {% endif %}
     
-    <h1>{{ artist.name }}</h1>
-    <p>Genre: {{ artist.genre }}</p>
+    <div class="artist-info">
+      <p><strong>Genre:</strong> {{ artist.genre }}</p>
+      <p><strong>Debut Date:</strong> {{ artist.debut_date }}</p>
+      <p><strong>Biography:</strong> {{ artist.bio }}</p>
+    </div>
 
-    <h2>Music:</h2>
-    <ul>
-        {% if artist.music.all %}
-            {% for song in artist.music.all %}
-                <li>
-                    <!-- Song Title and Artist -->
-                    <div class="song-info">
-                        <span class="song-title">{{ song.title }}</span>
-                        <span class="song-artist">by {{ song.artist.name }}</span>
-                    </div>
-
-                    <!-- Artist Image -->
-                    {% if song.artist.image %}
-                        <img src="{{ song.artist.image.url }}" alt="{{ song.artist.name }}" class="artist-image">
-                    {% else %}
-                        <span class="no-image">No image</span>
-                    {% endif %}
-
-                    <!-- Audio Player -->
-                    {% if song.audio %}
-                        <audio controls>
-                            <source src="{{ song.audio.url }}" type="audio/mpeg">
-                            Your browser does not support the audio element.
-                        </audio>
-                    {% else %}
-                        <p class="no-audio">No audio available for {{ song.title }}</p>
-                    {% endif %}
-                </li>
-            {% empty %}
-                <p class="no-music">No music available for this artist.</p>
-            {% endfor %}
-        {% else %}
-            <p class="no-music">No music records available for this artist.</p>
-        {% endif %}
+    <h2>Music by {{ artist.name }}</h2>
+    <ul class="music-list">
+      {% for music in artist.music.all %}
+        <li>
+          <h3>{{ music.title }}</h3>
+          <p><strong>Album:</strong> {{ music.album }}</p>
+          <p><strong>Genre:</strong> {{ music.genre }}</p>
+          {% if music.audio %}
+            <audio controls>
+              <source src="{{ music.audio.url }}" type="audio/mpeg">
+              Your browser does not support the audio element.
+            </audio>
+          {% endif %}
+        </li>
+      {% empty %}
+        <p>No music found for this artist.</p>
+      {% endfor %}
     </ul>
+  </div>
 
-    <a href="{% url 'artist-list' %}">Back to Artist List</a>
+  <style>
+    .artist-details {
+      font-family: Arial, sans-serif;
+      margin: 0 auto;
+      max-width: 1200px;
+      padding: 30px;
+      color: #333;
+    }
+    .artist-details h1 {
+      font-size: 36px;
+      font-weight: bold;
+      text-align: center;
+      color: #1e2a3a;
+      margin-bottom: 20px;
+    }
+    .artist-image {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .artist-image img {
+      width: 300px;
+      height: auto;
+      border-radius: 50%;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .artist-info {
+      background-color: #f9f9f9;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      margin-bottom: 40px;
+    }
+    .artist-info p {
+      font-size: 18px;
+      margin: 10px 0;
+    }
+    .artist-info strong {
+      color: #1e2a3a;
+    }
+    h2 {
+      font-size: 28px;
+      margin-bottom: 20px;
+      text-align: center;
+      color: #2c3e50;
+    }
+    .music-list {
+      list-style: none;
+      padding: 0;
+    }
+    .music-list li {
+      background-color: #ffffff;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .music-list h3 {
+      font-size: 24px;
+      margin-bottom: 10px;
+      color: #2980b9;
+    }
+    .music-list p {
+      font-size: 16px;
+      margin: 5px 0;
+    }
+    .music-list audio {
+      display: block;
+      margin-top: 10px;
+      width: 100%;
+    }
+    .music-list li:hover {
+      background-color: #ecf0f1;
+      transform: translateY(-5px);
+      transition: 0.3s ease-in-out;
+    }
+    .music-list p {
+      font-size: 18px;
+      color: #7f8c8d;
+    }
+    .music-list p strong {
+      color: #2c3e50;
+    }
+    .empty {
+      text-align: center;
+      color: #e74c3c;
+      font-size: 18px;
+    }
+  </style>
 {% endblock %}

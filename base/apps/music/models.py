@@ -18,7 +18,7 @@ class Music(models.Model):
     title = models.CharField(max_length=255)
     release_date = models.DateField(blank=True, null=True)
     duration = models.DurationField(blank=True, null=True)  # For song duration
-    artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name="songs")
+    artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name="music")
     album = models.CharField(max_length=255, blank=True, null=True)
     genre = models.CharField(max_length=100, blank=True, null=True)
     audio = models.FileField(upload_to='music_audio/', validators=[FileExtensionValidator(allowed_extensions=['mp3', 'wav'])], blank=True, null=True)
