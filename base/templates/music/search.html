@@ -204,12 +204,14 @@
                 {% for artist in artist_results %}
                     <div class="artist-item">
                         <!-- Artist Image -->
+                        <a href = "{% url 'artist-detail' artist.id %}">
                         {% if artist.image %}
                             <img src="{{ artist.image.url }}" alt="{{ artist.name }}" class="artist-image">
                         {% else %}
                             <span class="no-image">No image</span>
                         {% endif %}
                         <p>{{ artist.name }}</p>
+                    </a>
                     </div>
                 {% empty %}
                     <p class="no-results">No artists found.</p>
