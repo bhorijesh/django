@@ -3,7 +3,7 @@
 {% block title %}Artists List{% endblock %}
 
 {% block content %}
-    <h1>Artists</h1>
+
 
     <style>
         .artist-list {
@@ -40,29 +40,72 @@
             display: block;
             margin-top: 10px;
         }
+
         .artist-card p {
             color: black; /* Artist name color set to black */
             font-weight: bold;
             margin-top: 10px;
         }
+
+        /* Style for "Add New Artist" link */
+        .add-artist-link {
+            display: inline-block;
+            background-color: #4CAF50; /* Green background */
+            color: white;
+            padding: 12px 20px;
+            text-align: center;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+
+        .add-artist-link:hover {
+            background-color: #45a049; /* Darker green on hover */
+        }
+
+        /* Centering the "Add New Artist" link */
+        .center-button {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        /* Centering the artist list */
+        .center-list {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 10px;
+            list-style-type: none;
+        }
     </style>
 
-    <ul class="artist-list">
-        {% for artist in artists %}
-            <li class="artist-card">
-                <a href="{% url 'artist-detail' artist.id %}">
-                    {% if artist.image %}
-                        <img src="{{ artist.image.url }}" alt="{{ artist.name }}">
-                    {% else %}
-                        <span>No image</span>
-                    {% endif %}
-                    <p>{{ artist.name }}</p>
-                </a>
-            </li>
-        {% empty %}
-            <p>No artists available.</p>
-        {% endfor %}
-    </ul>
+    <!-- Centered Artist List -->
+    <div class="center-list">
+        <h1>Artists</h1>
+        <ul class="artist-list">
+            {% for artist in artists %}
+                <li class="artist-card">
+                    <a href="{% url 'artist-detail' artist.id %}">
+                        {% if artist.image %}
+                            <img src="{{ artist.image.url }}" alt="{{ artist.name }}">
+                        {% else %}
+                            <span>No image</span>
+                        {% endif %}
+                        <p>{{ artist.name }}</p>
+                    </a>
+                </li>
+            {% empty %}
+                <p>No artists available.</p>
+            {% endfor %}
+        </ul>
+    </div>
 
-    <a href="{% url 'artist-create' %}">Add New Artist</a>
+    <!-- Centered Add New Artist Button -->
+    <div class="center-button">
+        <a href="{% url 'artist-create' %}" class="add-artist-link">Add New Artist</a>
+    </div>
 {% endblock %}
